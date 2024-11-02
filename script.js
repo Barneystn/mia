@@ -1,3 +1,12 @@
+let currentPage = 1;
+const cardsPerPage = 2;
+
+let sortOrder = {
+    latest: true,
+    'top-rated': true,
+    'site-rated': true
+};
+
 window.onload = function() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     if (isLoggedIn === 'true') {
@@ -20,6 +29,23 @@ window.onload = function() {
         window.location.href = '../login.html';
     }
 };
+
+document.addEventListener('DOMContentLoaded', function () {
+    // چک می‌کند که آیا تم قبلاً ذخیره شده است یا خیر
+    const savedTheme = localStorage.getItem('theme') || 'cupcake';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // تغییر وضعیت چک‌باکس بر اساس تم ذخیره شده
+    const themeController = document.getElementById('theme-controller');
+    themeController.checked = savedTheme === 'forest';
+
+    // اضافه کردن رویداد به چک‌باکس
+    themeController.addEventListener('change', function () {
+        const newTheme = themeController.checked ? 'forest' : 'cupcake';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('#search-input');
@@ -72,6 +98,84 @@ function showPage(page, filteredMovies = null) {
     renderPagination(totalPages);
 }
 
+function renderPagination(totalPages) {
+    const paginationContainer = document.getElementById('paginationNumbers');
+    paginationContainer.innerHTML = '';
+
+    const pageNumbers = [];
+    if (currentPage > 1) pageNumbers.push(currentPage - 1);
+    pageNumbers.push(currentPage);
+    if (currentPage < totalPages) pageNumbers.push(currentPage + 1);
+    
+    if (currentPage > 2) {
+        pageNumbers.unshift(1);
+    }
+
+    if (currentPage < totalPages - 1) {
+        pageNumbers.push(totalPages);
+    }
+
+    const uniquePageNumbers = [...new Set(pageNumbers)];
+    const finalPages = [];
+
+    for (let i = 0; i < uniquePageNumbers.length; i++) {
+        finalPages.push(uniquePageNumbers[i]);
+
+        if (i < uniquePageNumbers.length - 1 && uniquePageNumbers[i + 1] - uniquePageNumbers[i] > 1) {
+            finalPages.push('...');
+        }
+    }
+
+    finalPages.forEach(page => {
+        if (page === '...') {
+            const dots = document.createElement('span');
+            dots.innerText = '...';
+            paginationContainer.appendChild(dots);
+        } else {
+            const pageLink = document.createElement('span');
+            pageLink.innerText = page;
+            pageLink.classList.add('page-number');
+            if (page === currentPage) pageLink.classList.add('active-page');
+
+            pageLink.onclick = () => changePage(page);
+            paginationContainer.appendChild(pageLink);
+        }
+    });
+
+    // اضافه کردن رویداد برای دکمه‌های قبلی و بعدی
+    const prevPageButton = document.getElementById('prevPage');
+    const nextPageButton = document.getElementById('nextPage');
+
+    prevPageButton.disabled = currentPage === 1;
+    nextPageButton.disabled = currentPage === totalPages;
+
+    prevPageButton.onclick = () => {
+        if (currentPage > 1) {
+            changePage(currentPage - 1);
+        }
+    };
+
+    nextPageButton.onclick = () => {
+        if (currentPage < totalPages) {
+            changePage(currentPage + 1);
+        }
+    };
+}
+
+function changePage(page) {
+    const skeletons = document.getElementById('skeletons');
+    const movieList = document.getElementById('movie-list');
+
+    // کارت‌ها را مخفی می‌کند
+    movieList.style.display = 'none';
+    skeletons.style.display = 'flex';
+
+    setTimeout(() => {
+        skeletons.style.display = 'none'; // اسکلت‌ها را مخفی می‌کند
+        movieList.style.display = 'grid'; // کارت‌ها را نمایش می‌دهد
+        showPage(page);
+    }, 1000); // یک ثانیه تاخیر قبل از نمایش کارت‌ها
+}
 
 
 function filterMovies() {
@@ -121,6 +225,39 @@ function filterMovies() {
     }, 1000); // یک ثانیه
 }
 
+
+
+function sortMovies(criteria) {
+    const movieList = document.getElementById('movie-list');
+    const movies = Array.from(movieList.children);
+
+    movies.forEach(movie => movie.classList.add('fade-out'));
+
+    setTimeout(() => {
+        movies.sort((a, b) => {
+            const aValue = criteria === 'latest' ? a.getAttribute('data-update') :
+                            criteria === 'top-rated' ? a.getAttribute('data-rating') :
+                            a.getAttribute('data-site-rating');
+
+            const bValue = criteria === 'latest' ? b.getAttribute('data-update') :
+                            criteria === 'top-rated' ? b.getAttribute('data-rating') :
+                            b.getAttribute('data-site-rating');
+        
+        return sortOrder[criteria] ? bValue - aValue : aValue - bValue;
+    });
+
+    sortOrder[criteria] = !sortOrder[criteria];
+
+    movieList.innerHTML = '';
+        movies.forEach(movie => {
+            movie.classList.remove('fade-out');
+            movie.classList.add('fade-in');
+            movieList.appendChild(movie);
+        });
+
+    showPage(currentPage);
+    }, 500);
+}
 
 // رویدادها
 document.querySelector('#search-input').addEventListener('input', filterMovies);
