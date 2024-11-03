@@ -271,13 +271,13 @@
 /* تنظیمات در دستگاه‌های بزرگتر */
 @media (min-width: 600px) {
     .skeleton-card {
-        width: 170px;
+        width: 300px;
     }
 }
 
 @media (min-width: 768px) {
     .skeleton-card {
-        width: 200px;
+        width: 370px;
     }
 }
 
@@ -302,13 +302,13 @@
 /* تنظیمات در دستگاه‌های بزرگتر */
 @media (min-width: 600px) {
     .skaleton-card {
-        width: 170px;
+        width: 300px;
     }
 }
 
 @media (min-width: 768px) {
     .skaleton-card {
-        width: 200px;
+        width: 370px;
     }
 }
 
