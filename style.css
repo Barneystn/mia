@@ -319,19 +319,22 @@
         align-items: center;
     }
     .join-item {
-        width: 100%;
-        margin-bottom: 8px;
+        width: auto; /* تنظیم عرض خودکار */
     }
+
+    .indicator-item {
+        margin: 0;
+    }
+
     #search-input {
-        width: 90%; /* تنظیم عرض برای ورودی جستجو */
-        max-width: 200px; /* حد اکثر عرض برای کنترل بزرگ‌تر نشدن */
+        width: 100px; /* تنظیم عرض کوچکتر برای دستگاه‌های موبایل */
     }
+
     #filter-select {
-        width: 90%; /* تنظیم عرض برای فیلتر انتخاب */
-        max-width: 200px;
+        width: 70px; /* تنظیم عرض کوچکتر برای دستگاه‌های موبایل */
     }
+
     #search-button {
-        width: 90%; /* تنظیم عرض برای دکمه جستجو */
-        max-width: 200px;
+        width: 57px; /* تنظیم عرض کوچکتر برای دستگاه‌های موبایل */
     }
 }
