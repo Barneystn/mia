@@ -302,13 +302,13 @@
 /* تنظیمات در دستگاه‌های بزرگتر */
 @media (min-width: 600px) {
     .skaleton-card {
-        width: 120px;
+        width: 170px;
     }
 }
 
 @media (min-width: 768px) {
     .skaleton-card {
-        width: 140px;
+        width: 187px;
     }
 }
 
@@ -336,12 +336,5 @@
 
     #search-button {
         width: 57px; /* تنظیم عرض کوچکتر برای دستگاه‌های موبایل */
-    }
-}
-
-@media (max-width: 768px) {
-    .swap-off, .swap-on {
-        height: 3rem; /* یا هر اندازه‌ای که مد نظر شماست */
-        width: 3rem;
     }
 }
