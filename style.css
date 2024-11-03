@@ -315,7 +315,7 @@
 @media (max-width: 768px) {
     .join {
         display: flex;
-        flex-direction: column;
+        flex-direction: center;
         align-items: center;
     }
     .join-item {
