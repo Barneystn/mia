@@ -171,9 +171,9 @@
 .btn-42 {
   -webkit-tap-highlight-color: transparent;
   -webkit-appearance: button;
-  background-color: #c71e04;
+  background-color: #000000;
   background-image: none;
-  color: #fff;
+  color: #dc0d0d;
   cursor: pointer;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
