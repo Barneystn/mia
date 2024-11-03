@@ -312,3 +312,26 @@
     }
 }
 
+@media (max-width: 768px) {
+    .join {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .join-item {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    #search-input {
+        width: 90%; /* تنظیم عرض برای ورودی جستجو */
+        max-width: 200px; /* حد اکثر عرض برای کنترل بزرگ‌تر نشدن */
+    }
+    #filter-select {
+        width: 90%; /* تنظیم عرض برای فیلتر انتخاب */
+        max-width: 200px;
+    }
+    #search-button {
+        width: 90%; /* تنظیم عرض برای دکمه جستجو */
+        max-width: 200px;
+    }
+}
