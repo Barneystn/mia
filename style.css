@@ -341,7 +341,7 @@
 
 @media (max-width: 768px) {
     .swap-off, .swap-on {
-        height: 4rem; /* یا هر اندازه‌ای که مد نظر شماست */
-        width: 4rem;
+        height: 3rem; /* یا هر اندازه‌ای که مد نظر شماست */
+        width: 3rem;
     }
 }
