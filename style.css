@@ -338,3 +338,10 @@
         width: 57px; /* تنظیم عرض کوچکتر برای دستگاه‌های موبایل */
     }
 }
+
+@media (max-width: 768px) {
+    .swap-off, .swap-on {
+        height: 4rem; /* یا هر اندازه‌ای که مد نظر شماست */
+        width: 4rem;
+    }
+}
