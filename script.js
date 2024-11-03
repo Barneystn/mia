@@ -7,8 +7,36 @@ let sortOrder = {
     'site-rated': true
 };
 
+// تنظیم کوکی
+function setCookie(name, value, hours) {
+    let expires = "";
+    if (hours) {
+        const date = new Date();
+        date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+// خواندن کوکی
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+// حذف کوکی
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
+}
+
 window.onload = function() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const isLoggedIn = getCookie('isLoggedIn');
     if (isLoggedIn === 'true') {
         document.body.style.display = 'block';
 
@@ -22,7 +50,7 @@ window.onload = function() {
 
         const params = new URLSearchParams(window.location.search);
         const pageParam = params.get('page');
-        currentPage = pageParam ? parseInt(pageParam) : 1; 
+        currentPage = pageParam ? parseInt(pageParam) : 1;
         
         showPage(currentPage);
     } else {
