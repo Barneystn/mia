@@ -328,7 +328,7 @@
 
     #search-input {
         width: 100px; /* تنظیم عرض کوچکتر برای دستگاه‌های موبایل */
-        height: 30px; /* کاهش ارتفاع */
+        height: 32px; /* کاهش ارتفاع */
     }
 
     #filter-select {
