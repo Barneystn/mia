@@ -333,6 +333,8 @@
 
     #filter-select {
         width: 57px; /* تنظیم عرض کوچکتر برای دستگاه‌های موبایل */
+        font-size: 12px !important;
+        text-align: center; /* وسط‌چین افقی */
     }
 
     #search-button {
