@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('#search-input');
