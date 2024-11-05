@@ -5,10 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cards.forEach(card => {
         const category = card.getAttribute("data-category");
+
         if (currentPath.includes("/movies") && category !== "movies") {
             card.style.display = "none";
         } else if (currentPath.includes("/series") && category !== "series") {
             card.style.display = "none";
+        } else if (currentPath.includes("/anime") && category !== "anime") {
+            card.style.display = "none";
+        } else if (currentPath.includes("/irani") && category !== "irani") {
+            card.style.display = "none";
+        } else {
+            card.style.display = "block"; // نمایش کارت‌های مطابق با دسته‌بندی
         }
     });
     
