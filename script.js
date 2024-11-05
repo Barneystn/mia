@@ -134,10 +134,6 @@ function showPage(page, filteredMovies = null) {
 
     currentPage = page; 
     renderPagination(totalPages);
-
-    window.history.pushState({ page: page }, '', `?page=${page}`);
-
-    renderPagination(totalPages);
 }
 
 function renderPagination(totalPages) {
