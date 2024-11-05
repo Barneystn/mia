@@ -1,43 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // فیلتر کردن کارت‌ها بر اساس مسیر URL
-    const cards = document.querySelectorAll("#movie-list .card");
-    const currentPath = window.location.pathname;
-
-    cards.forEach(card => {
-        const category = card.getAttribute("data-category");
-
-        if (currentPath.includes("/movies") && category !== "movies") {
-            card.style.display = "none";
-        } else if (currentPath.includes("/series") && category !== "series") {
-            card.style.display = "none";
-        } else if (currentPath.includes("/anime") && category !== "anime") {
-            card.style.display = "none";
-        } else if (currentPath.includes("/irani") && category !== "irani") {
-            card.style.display = "none";
-        } else {
-            card.style.display = "block"; // نمایش کارت‌های مطابق با دسته‌بندی
-        }
-    });
-    
-
-    // کدهای دیگر ...
-
-    // چک می‌کند که آیا تم قبلاً ذخیره شده است یا خیر
-    const savedTheme = localStorage.getItem('theme') || 'retro';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-
-    // تغییر وضعیت چک‌باکس بر اساس تم ذخیره شده
-    const themeController = document.getElementById('theme-controller');
-    themeController.checked = savedTheme === 'forest';
-
-    // اضافه کردن رویداد به چک‌باکس
-    themeController.addEventListener('change', function () {
-        const newTheme = themeController.checked ? 'forest' : 'retro';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-    });
-});
-
 let currentPage = 1;
 const cardsPerPage = 2;
 
@@ -98,6 +58,24 @@ window.onload = function() {
     }
 };
 
+document.addEventListener('DOMContentLoaded', function () {
+    // چک می‌کند که آیا تم قبلاً ذخیره شده است یا خیر
+    const savedTheme = localStorage.getItem('theme') || 'retro';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // تغییر وضعیت چک‌باکس بر اساس تم ذخیره شده
+    const themeController = document.getElementById('theme-controller');
+    themeController.checked = savedTheme === 'forest';
+
+    // اضافه کردن رویداد به چک‌باکس
+    themeController.addEventListener('change', function () {
+        const newTheme = themeController.checked ? 'forest' : 'retro';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('#search-input');
     const searchButton = document.querySelector('#search-button');
@@ -142,6 +120,10 @@ function showPage(page, filteredMovies = null) {
     }
 
     currentPage = page; 
+    renderPagination(totalPages);
+
+    window.history.pushState({ page: page }, '', `?page=${page}`);
+
     renderPagination(totalPages);
 }
 
@@ -189,6 +171,7 @@ function renderPagination(totalPages) {
         }
     });
 
+    // اضافه کردن رویداد برای دکمه‌های قبلی و بعدی
     const prevPageButton = document.getElementById('prevPage');
     const nextPageButton = document.getElementById('nextPage');
 
@@ -212,15 +195,17 @@ function changePage(page) {
     const skeletons = document.getElementById('skeletons');
     const movieList = document.getElementById('movie-list');
 
+    // کارت‌ها را مخفی می‌کند
     movieList.style.display = 'none';
     skeletons.style.display = 'flex';
 
     setTimeout(() => {
-        skeletons.style.display = 'none';
-        movieList.style.display = 'grid';
+        skeletons.style.display = 'none'; // اسکلت‌ها را مخفی می‌کند
+        movieList.style.display = 'grid'; // کارت‌ها را نمایش می‌دهد
         showPage(page);
-    }, 1000);
+    }, 1000); // یک ثانیه تاخیر قبل از نمایش کارت‌ها
 }
+
 
 function filterMovies() {
     const searchTerm = document.querySelector('#search-input').value.toLowerCase();
@@ -229,9 +214,11 @@ function filterMovies() {
 
     let matchedMovies = [];
 
+    // پنهان کردن کارت‌ها و نشان دادن اسکلت‌ها
     document.getElementById('movie-list').classList.add('hidden');
     document.getElementById('skeletonsx').classList.remove('hidden');
 
+    // تأخیر یک ثانیه‌ای برای نشان دادن اسکلت‌ها
     setTimeout(function() {
         movies.forEach(movie => {
             const title = movie.querySelector('h4').textContent.toLowerCase();
@@ -258,12 +245,16 @@ function filterMovies() {
             }
         });
 
+        // پنهان کردن اسکلت‌ها و نشان دادن کارت‌ها
         document.getElementById('skeletonsx').classList.add('hidden');
         document.getElementById('movie-list').classList.remove('hidden');
 
+        // به صفحه اول برگردید و نتایج فیلتر شده را نمایش دهید
         showPage(1, matchedMovies);
-    }, 1000);
+    }, 1000); // یک ثانیه
 }
+
+
 
 function sortMovies(criteria) {
     const movieList = document.getElementById('movie-list');
@@ -274,27 +265,33 @@ function sortMovies(criteria) {
     setTimeout(() => {
         movies.sort((a, b) => {
             const aValue = criteria === 'latest' ? a.getAttribute('data-update') :
-                            criteria === 'top-rated' ? a.getAttribute('data-imdb') :
+                            criteria === 'top-rated' ? a.getAttribute('data-rating') :
                             a.getAttribute('data-site-rating');
 
             const bValue = criteria === 'latest' ? b.getAttribute('data-update') :
-                            criteria === 'top-rated' ? b.getAttribute('data-imdb') :
+                            criteria === 'top-rated' ? b.getAttribute('data-rating') :
                             b.getAttribute('data-site-rating');
+        
+        return sortOrder[criteria] ? bValue - aValue : aValue - bValue;
+    });
 
-            return sortOrder[criteria] ? bValue.localeCompare(aValue) : aValue.localeCompare(bValue);
-        });
+    sortOrder[criteria] = !sortOrder[criteria];
 
-        sortOrder[criteria] = !sortOrder[criteria];
-
-        movieList.innerHTML = '';
+    movieList.innerHTML = '';
         movies.forEach(movie => {
             movie.classList.remove('fade-out');
             movie.classList.add('fade-in');
             movieList.appendChild(movie);
         });
 
-        setTimeout(() => {
-            movies.forEach(movie => movie.classList.remove('fade-in'));
-        }, 300);
-    }, 300);
+    showPage(currentPage);
+    }, 500);
 }
+
+// رویدادها
+document.querySelector('#search-input').addEventListener('input', filterMovies);
+document.querySelector('#search-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        filterMovies();
+    }
+});

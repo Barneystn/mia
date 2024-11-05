@@ -1,7 +1,6 @@
 .card {
-    display: block !important;
+    display: none;
 }
-
 
 /* Reset Styles */
 * {
