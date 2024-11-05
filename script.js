@@ -72,8 +72,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const newTheme = themeController.checked ? 'forest' : 'retro';
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-    });
+
+        // تغییر کلاس دکمه
+    const button = document.querySelector('.moen button'); // انتخاب دکمه مورد نظر
+    if (newTheme === 'forest') {
+        button.classList.remove('btn-42');
+        button.classList.add('bg-primary');
+    } else {
+        button.classList.remove('bg-primary');
+        button.classList.add('btn-42');
+    }
+
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('#search-input');
