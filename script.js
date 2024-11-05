@@ -74,13 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('theme', newTheme);
     });
 
-    // اضافه کردن رویداد به دکمه‌ها برای نمایش لیست بر اساس دسته‌بندی
-    document.querySelectorAll('.category-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const category = this.getAttribute('data-category');
-            filterByCategory(category);
-        });
-    });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
