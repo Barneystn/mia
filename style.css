@@ -294,43 +294,15 @@
 }
 
 
-/* اسکلت کارت */
-.skeleton-card {
-    background-color: #2d3748; /* رنگ پس‌زمینه مشابه کارت اصلی */
-    border-radius: 0.5rem;
-    overflow: hidden;
-    position: relative;
-    padding: 1rem;
-    animation: pulse 1.5s infinite;
+#skeleton-loader {
+    display: none; /* حالت اولیه */
 }
 
-/* انیمیشن پالس */
-@keyframes pulse {
-    0% {
-        background-color: #2d3748;
-    }
-    50% {
-        background-color: #4a5568;
-    }
-    100% {
-        background-color: #2d3748;
-    }
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
 }
 
-/* اسکلت تصویر */
-.skeleton-img {
-    width: 100%;
-    height: 12rem; /* ارتفاع مشابه تصاویر کارت اصلی */
-    background-color: #4a5568;
-    margin-bottom: 1rem;
-    border-radius: 0.5rem;
-}
-
-/* اسکلت متن */
-.skeleton-text {
-    width: 70%;
-    height: 1.25rem;
-    background-color: #4a5568;
-    margin-bottom: 0.5rem;
-    border-radius: 0.25rem;
+.fade-in.show {
+    opacity: 1;
 }

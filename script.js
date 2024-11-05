@@ -191,15 +191,22 @@ function renderPagination(totalPages) {
 }
 
 function changePage(page) {
-    currentPage = page;
-    
-    const movieList = document.querySelectorAll('#movie-list .card');
-    movieList.forEach(card => card.classList.add('skeleton')); // افزودن کلاس اسکلت
+    const skeletonloader = document.getElementById('skeleton-loader');
+    const movieList = document.getElementById('movie-list');
 
+    // نمایش اسکلت
+    movieList.classList.add("fade-in");
+    movieList.classList.remove("show");
+    skeletonLoader.classList.remove("hidden");
+    skeletonLoader.classList.add("show");
+
+    // بعد از یک ثانیه اسکلت مخفی شود و محتوای واقعی نمایش داده شود
     setTimeout(() => {
-        showPage(currentPage);
-        movieList.forEach(card => card.classList.remove('skeleton')); // حذف کلاس اسکلت
-    }, 1000); // یک ثانیه تأخیر
+        skeletonLoader.classList.remove("show");
+        skeletonLoader.classList.add("hidden");
+
+        movieList.classList.add("show");
+    }, 1000);
 }
 
 
