@@ -191,18 +191,15 @@ function renderPagination(totalPages) {
 }
 
 function changePage(page) {
-    const skeletons = document.getElementById('skeletons');
-    const movieList = document.getElementById('movie-list');
-
-    // کارت‌ها را مخفی می‌کند
-    movieList.style.display = 'none';
-    skeletons.style.display = 'flex';
+    currentPage = page;
+    
+    const movieList = document.querySelectorAll('#movie-list .card');
+    movieList.forEach(card => card.classList.add('skeleton')); // افزودن کلاس اسکلت
 
     setTimeout(() => {
-        skeletons.style.display = 'none'; // اسکلت‌ها را مخفی می‌کند
-        movieList.style.display = 'grid'; // کارت‌ها را نمایش می‌دهد
-        showPage(page);
-    }, 1000); // یک ثانیه تاخیر قبل از نمایش کارت‌ها
+        showPage(currentPage);
+        movieList.forEach(card => card.classList.remove('skeleton')); // حذف کلاس اسکلت
+    }, 1000); // یک ثانیه تأخیر
 }
 
 
