@@ -4,11 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentPath = window.location.pathname;
 
     cards.forEach(card => {
-        const hrefValue = card.getAttribute("href"); // گرفتن مقدار href
-        
-        if (currentPath.includes("/movies") && !hrefValue.includes("movies")) {
+        const category = card.getAttribute("data-category");
+        if (currentPath.includes("/movies") && category !== "movies") {
             card.style.display = "none";
-        } else if (currentPath.includes("/series") && !hrefValue.includes("series")) {
+        } else if (currentPath.includes("/series") && category !== "series") {
             card.style.display = "none";
         }
     });
