@@ -76,19 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const cards = document.querySelectorAll("#movie-list .card");
-    const currentPath = window.location.pathname;
-
-    cards.forEach(card => {
-        if (currentPath.includes("/movies?page=1") && !card.getAttribute("href").includes("movies")) {
-            card.style.display = "none";
-        } else if (currentPath.includes("/series?page=1") && !card.getAttribute("href").includes("series")) {
-            card.style.display = "none";
-        }
-    });
-});
-
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('#search-input');
     const searchButton = document.querySelector('#search-button');
