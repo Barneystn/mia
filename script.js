@@ -72,21 +72,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const newTheme = themeController.checked ? 'forest' : 'retro';
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-
-        // تغییر کلاس دکمه‌ها
-        const buttons = document.querySelectorAll('.flex button'); // انتخاب همه دکمه‌ها
-        buttons.forEach(button => {
-            if (newTheme === 'forest') {
-                button.classList.remove('btn-42');
-                button.classList.add('bg-primary');
-            } else {
-                button.classList.remove('bg-primary');
-                button.classList.add('btn-42');
-            }
-        });
     });
 });
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('#search-input');
