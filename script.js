@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('theme', newTheme);
     });
 
-document.addEventListener("DOMContentLoaded", () => {
+{
   // فیلتر کردن کارت‌ها بر اساس مسیر URL
     const cards = document.querySelectorAll("#movie-list .card");
     const currentPath = window.location.pathname;
