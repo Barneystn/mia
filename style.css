@@ -251,7 +251,66 @@
     text-decoration: underline; /* زیرخط برای صفحه فعال */
 }
 
+/* تنظیمات کانتینر اصلی */
+.skeleton-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 16px;
+}
 
+/* تنظیمات هر کارت */
+.skeleton-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100px;
+}
+
+/* تنظیمات در دستگاه‌های بزرگتر */
+@media (min-width: 600px) {
+    .skeleton-card {
+        width: 300px;
+    }
+}
+
+@media (min-width: 768px) {
+    .skeleton-card {
+        width: 370px;
+    }
+}
+
+
+/* تنظیمات کانتینر اصلی */
+.skaleton-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 16px;
+}
+
+/* تنظیمات هر کارت */
+.skaleton-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100px;
+}
+
+/* تنظیمات در دستگاه‌های بزرگتر */
+@media (min-width: 600px) {
+    .skaleton-card {
+        width: 300px;
+    }
+}
+
+@media (min-width: 768px) {
+    .skaleton-card {
+        width: 370px;
+    }
+}
 
 @media (max-width: 768px) {
     .join {
@@ -291,18 +350,4 @@
 
 .text-orange-600 {
     color: #dd6b20; /* رنگ متناسب با bg-orange-600 */
-}
-
-
-#skeleton-loader {
-    display: none; /* حالت اولیه */
-}
-
-.fade-in {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.fade-in.show {
-    opacity: 1;
 }
