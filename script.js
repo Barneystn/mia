@@ -4,12 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentPath = window.location.pathname;
 
     cards.forEach(card => {
-        if (currentPath.includes("/movies") && !card.getAttribute("href").includes("movies")) {
+        const hrefValue = card.getAttribute("href"); // گرفتن مقدار href
+        
+        if (currentPath.includes("/movies") && !hrefValue.includes("movies")) {
             card.style.display = "none";
-        } else if (currentPath.includes("/series") && !card.getAttribute("href").includes("series")) {
+        } else if (currentPath.includes("/series") && !hrefValue.includes("series")) {
             card.style.display = "none";
         }
     });
+    
 
     // کدهای دیگر ...
 
