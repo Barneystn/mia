@@ -194,19 +194,15 @@ function changePage(page) {
     const skeletonloader = document.getElementById('skeleton-loader');
     const movieList = document.getElementById('movie-list');
 
-    // نمایش اسکلت
-    movieList.classList.add("fade-in");
-    movieList.classList.remove("show");
-    skeletonLoader.classList.remove("hidden");
-    skeletonLoader.classList.add("show");
+    // کارت‌ها را مخفی می‌کند
+    movieList.style.display = 'none';
+    skeletonloader.style.display = 'flex';
 
-    // بعد از یک ثانیه اسکلت مخفی شود و محتوای واقعی نمایش داده شود
     setTimeout(() => {
-        skeletonLoader.classList.remove("show");
-        skeletonLoader.classList.add("hidden");
-
-        movieList.classList.add("show");
-    }, 1000);
+        skeletonloader.style.display = 'none'; // اسکلت‌ها را مخفی می‌کند
+        movieList.style.display = 'grid'; // کارت‌ها را نمایش می‌دهد
+        showPage(page);
+    }, 1000); // یک ثانیه تاخیر قبل از نمایش کارت‌ها
 }
 
 
