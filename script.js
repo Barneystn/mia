@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('theme', newTheme);
 
         // تغییر کلاس دکمه
-    const button = document.querySelector('.moen button'); // انتخاب دکمه مورد نظر
+    const button = document.querySelector('.flex button'); // انتخاب دکمه مورد نظر
     if (newTheme === 'forest') {
         button.classList.remove('btn-42');
         button.classList.add('bg-primary');
