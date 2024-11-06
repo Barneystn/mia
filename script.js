@@ -57,7 +57,7 @@ window.onload = function() {
         // کد فیلتر کردن بر اساس URL
         const currentPath = window.location.pathname;
         cards.forEach(card => {
-            const href = card.getAttribute("href");
+            const href = card.getAttribute("href") || "";
             if (currentPath.includes("/movies") && !href.includes("movies")) {
                 card.style.display = "none";
             } else if (currentPath.includes("/series") && !href.includes("series")) {
