@@ -122,15 +122,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showPage(page, filteredMovies = null) {
     const movieList = filteredMovies || Array.from(document.querySelectorAll('#movie-list .card'));
+    const displayedCards = Math.min(movieList.length, cardsPerPage); // تعداد کارت‌های نمایش داده‌شده
     const totalPages = Math.ceil(movieList.length / cardsPerPage);
 
-    // اسکرول به بالای فهرست کارت‌ها
     document.getElementById('movie-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     movieList.forEach(card => card.style.display = 'none');
 
     const start = (page - 1) * cardsPerPage;
-    const end = start + cardsPerPage;
+    const end = start + displayedCards; // استفاده از تعداد کارت‌های فیلتر شده
     for (let i = start; i < end && i < movieList.length; i++) {
         movieList[i].style.display = 'block';
     }
@@ -139,9 +139,8 @@ function showPage(page, filteredMovies = null) {
     renderPagination(totalPages);
 
     window.history.pushState({ page: page }, '', `?page=${page}`);
-
-    renderPagination(totalPages);
 }
+
 
 function renderPagination(totalPages) {
     const paginationContainer = document.getElementById('paginationNumbers');
