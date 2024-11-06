@@ -38,7 +38,6 @@ function eraseCookie(name) {
 window.onload = function() {
     const isLoggedIn = getCookie('isLoggedIn');
     if (isLoggedIn === 'true') {
-        document.body.style.display = 'block';
 
         const skeletons = document.getElementById('skeletons');
         skeletons.style.display = 'none';
