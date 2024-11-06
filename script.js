@@ -7,70 +7,38 @@ let sortOrder = {
     'site-rated': true
 };
 
-// تنظیم کوکی
-function setCookie(name, value, hours) {
-    let expires = "";
-    if (hours) {
-        const date = new Date();
-        date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-
-// خواندن کوکی
-function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
-// حذف کوکی
-function eraseCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999;';
-}
 
 window.onload = function() {
-    const isLoggedIn = getCookie('isLoggedIn');
-    if (isLoggedIn === 'true') {
-        document.body.style.display = 'block';
+    document.body.style.display = 'block';
 
-        const skeletons = document.getElementById('skeletons');
-        skeletons.style.display = 'none';
+    const skeletons = document.getElementById('skeletons');
+    skeletons.style.display = 'none';
 
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.style.display = 'block';
-        });
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.style.display = 'block';
+    });
 
-        const params = new URLSearchParams(window.location.search);
-        const pageParam = params.get('page');
-        currentPage = pageParam ? parseInt(pageParam) : 1;
+    const params = new URLSearchParams(window.location.search);
+    const pageParam = params.get('page');
+    currentPage = pageParam ? parseInt(pageParam) : 1;
 
-        showPage(currentPage);
+    showPage(currentPage);
 
-        // کد فیلتر کردن بر اساس URL
-        const currentPath = window.location.pathname;
-        cards.forEach(card => {
-            const href = card.getAttribute("href");
-            if (currentPath.includes("/movies") && !href.includes("movies")) {
-                card.style.display = "none";
-            } else if (currentPath.includes("/series") && !href.includes("series")) {
-                card.style.display = "none";
-            } else if (currentPath.includes("/anime") && !href.includes("anime")) {
-                card.style.display = "none";
-            } else if (currentPath.includes("/irani") && !href.includes("irani")) {
-                card.style.display = "none";
-            }
-        });
-    } else {
-        window.location.href = '../login.html';
-    }
+    // کد فیلتر کردن بر اساس URL
+    const currentPath = window.location.pathname;
+    cards.forEach(card => {
+        const href = card.getAttribute("href");
+        if (currentPath.includes("/movies") && !href.includes("movies")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/series") && !href.includes("series")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/anime") && !href.includes("anime")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/irani") && !href.includes("irani")) {
+            card.style.display = "none";
+        }
+    });
 };
 
 
