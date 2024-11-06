@@ -51,12 +51,28 @@ window.onload = function() {
         const params = new URLSearchParams(window.location.search);
         const pageParam = params.get('page');
         currentPage = pageParam ? parseInt(pageParam) : 1;
-        
+
         showPage(currentPage);
+
+        // کد فیلتر کردن بر اساس URL
+        const currentPath = window.location.pathname;
+        cards.forEach(card => {
+            const href = card.getAttribute("href");
+            if (currentPath.includes("/movies") && !href.includes("movies")) {
+                card.style.display = "none";
+            } else if (currentPath.includes("/series") && !href.includes("series")) {
+                card.style.display = "none";
+            } else if (currentPath.includes("/anime") && !href.includes("anime")) {
+                card.style.display = "none";
+            } else if (currentPath.includes("/irani") && !href.includes("irani")) {
+                card.style.display = "none";
+            }
+        });
     } else {
         window.location.href = '../login.html';
     }
 };
+
 
 document.addEventListener('DOMContentLoaded', function () {
     // چک می‌کند که آیا تم قبلاً ذخیره شده است یا خیر
