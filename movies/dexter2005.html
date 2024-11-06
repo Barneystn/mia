@@ -6,10 +6,20 @@
     <title>nimbox</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../style.css">
-    <script src="../script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-15HFEJ3DK5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-15HFEJ3DK5');
+</script>
+
 </head>
-<body class="drawer">
+<body class="fade-in drawer">
     <div class="drawer">
         <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col relative z-0">
@@ -60,6 +70,23 @@
                     </ul>
                 </div>
 
+                <div class="flex justify-end w-full">
+                    <div class="join mr-3">
+                        <div>
+                            <input id="search-input" class="input input-primary input-sm w-full max-w-xs join-item" placeholder="Search" />
+                        </div>
+                        <select id="filter-select" class="select select-primary select-sm w-full max-w-xs join-item">
+                            <option value="all" selected>All</option>
+                            <option value="movies">Movies</option>
+                            <option value="series">Series</option>
+                            <option value="anime">Anime</option>
+                            <option value="irani">Irani</option>
+                        </select>
+                        <div class="indicator">
+                            <span class="indicator-item badge badge-secondary">Go</span>
+                            <button id="search-button" class="btn btn-primary btn-sm join-item" onclick="filterMovies()" disabled>Search</button>
+                        </div>
+                    </div>
       
                         <!-- Theme Toggle -->
                         <label class="swap swap-rotate">
@@ -114,47 +141,256 @@
     </div>
 
     <main class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row animate-fade-in">
-        <!-- اطلاعات فیلم -->
-        <div class="p-6 flex flex-col justify-center w-full md:w-1/2 text-white animate-slide-in-left text-right rtl">
-            <h1 class="text-2xl font-bold mb-4">نام فیلم</h1>
-            <p class="text-gray-400 mb-4">
-                خلاصه‌ای کوتاه از فیلم. این بخش می‌تواند توضیحاتی در مورد داستان و جزئیات فیلم باشد. فیلمی که شما را به دنیایی جدید می‌برد و تجربه‌ای خاص فراهم می‌کند.
-            </p>
-            <ul class="text-gray-400 space-y-2">
-                <li><strong>ژانر:</strong> درام، ماجراجویی</li>
-                <li><strong>سال تولید:</strong> 2023</li>
-                <li><strong>امتیاز:</strong> 8.5/10</li>
-                <li><strong>مدت زمان:</strong> 2 ساعت و 30 دقیقه</li>
-            </ul>
+        <div class="flex justify-start gap-2 mb-6">
+            <button onclick="sortMovies('latest')" class="btn-42"><span>Latest</span></button>
+            <button onclick="sortMovies('top-rated')" class="btn-42"><span>Top Rated</span></button>
+            <button onclick="sortMovies('site-rated')" class="btn-42"><span>Site Rated</span></button>
         </div>
-        <!-- عکس فیلم -->
-        <div class="w-full md:w-1/2">
-            <img src="https://i.ibb.co/1JqZymT/supernatural-castiel-dean-and-sam-fi61lb0dkhpwdt4j.webp" alt="پوستر فیلم" class="object-cover w-full h-full animate-slide-in-right">
+
+        <div id="skeletons" class="skeleton-container">
+            <!-- اسکلت اول -->
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skeleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
         </div>
-    </div>
 
-    <style>
-        /* تعریف انیمیشن‌ها */
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slide-in-left {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        @keyframes slide-in-right {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+        <div id="skeletonsx" class="hidden skaleton-container">
+            <!-- اسکلت اول -->
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
 
-        .animate-fade-in { animation: fade-in 0.8s ease-in-out; }
-        .animate-slide-in-left { animation: slide-in-left 0.8s ease-in-out; }
-        .animate-slide-in-right { animation: slide-in-right 0.8s ease-in-out; }
-    </style>
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+
+            <div class="skaleton-card">
+                <div class="skeleton h-32 w-full"></div>
+                <div class="skeleton h-4 w-28"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+        </div>
+
+        <div id="movie-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Movie Card 1 -->
+            <a href="movies/dexter2005.html" class="card bg-neutral rounded-lg overflow-hidden relative transition duration-300 ease-in-out transform hover:scale-105" data-rating="8.6" data-update="20230901" data-site-rating="7.9">
+                <div class="badge badge-secondary absolute top-2 left-2" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);">Blu-ray</div>
+                <div class="badge badge-secondary absolute top-8 left-2" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3)">remux</div>
+                <div class="badge badge-accent absolute top-2 right-2" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);">dubble</div>
+                <img src="https://i.ibb.co/tB8R8vW/99741f6b-8ea0-4016-8393-06903fd1463f.webp" alt="Dexter" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-base md:text-lg font-semibold text-white">Dexter 2005</h4>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.6</span>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="Site" class="w-6 h-6 mr-1">
+                                <span class="text-white">7.9</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm mt-2">Genre: Drama, Crime</p>
+                </div>
+                <div class="summary-overlay p-4 text-gray-300 flex flex-col">
+                    <p class="font-semibold">Quality: <span class="font-normal">1080p WEB-DL</span></p>
+                    <p class="font-semibold">Time: <span class="font-normal">110 Min</span></p>
+                    <p class="font-semibold">Director: <span class="font-normal">Mélanie Laurent</span></p>
+                    <p class="font-semibold">STARS: <span class="font-normal">Lucas Bravo, Léa Luce Busato, Yvan Attal</span></p>
+                    <p class="font-semibold">county: <span class="font-normal">france</span></p>
+                    <p class="mt-2">داستانی واقعی درباره برونو سولاک، آرسن لوپنِ حقیقی قرن بیستم.</p>
+                </div>
+            </a>
+
+            <!-- Movie Card 2 -->
+            <a href="series/supernatural.html" class="card bg-neutral rounded-lg overflow-hidden relative transition duration-300 ease-in-out transform hover:scale-105" data-rating="8.4" data-update="20231005" data-site-rating="7.7">
+                <img src="https://i.ibb.co/1JqZymT/supernatural-castiel-dean-and-sam-fi61lb0dkhpwdt4j.webp" alt="Supernatural" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-base md:text-lg font-semibold text-white">Supernatural</h4>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.4</span>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="Site" class="w-6 h-6 mr-1">
+                                <span class="text-white">7.7</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm mt-2">Genre: Fantasy, Horror</p>
+                </div>
+                <div class="summary-overlay">Two brothers hunt demons, ghosts, and other supernatural creatures.</div>
+            </a>
+
+
+            <a href="anime/sonsoik.html" class="card bg-neutral rounded-lg overflow-hidden relative transition duration-300 ease-in-out transform hover:scale-105" data-rating="8.5" data-update="20230818" data-site-rating="8.3">
+                <img src="https://i.ibb.co/44R3nCP/sons-of-anarchy-zmwcl9jv09kmdvx3.webp" alt="Sons of Anarchy" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-semibold text-white" style="font-size: 14px;">Sons of Anarchy 2007</h4>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.6</span>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="Site" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm mt-2">Genre: Crime, Drama</p>
+                </div>
+                <div class="summary-overlay">An outlaw motorcycle clubs fights to protect their town and way of life.</div>
+            </a>
+
+            <a href="/anime/sonslkhy.html" class="card bg-neutral rounded-lg overflow-hidden relative transition duration-300 ease-in-out transform hover:scale-105" data-rating="8.7" data-update="20230807" data-site-rating="8.4">
+                <img src="https://i.ibb.co/44R3nCP/sons-of-anarchy-zmwcl9jv09kmdvx3.webp" alt="Sons of Anarchy" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-semibold text-white" style="font-size: 14px;">Sons of Anarchy 2007</h4>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.6</span>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="Site" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm mt-2">Genre: Crime, Drama</p>
+                </div>
+                <div class="summary-overlay">An outlaw motorcycle clubs fights to protect their town and way of life.</div>
+            </a>
+
+            <a href="/anime/sonlk.html" class="card bg-neutral rounded-lg overflow-hidden relative transition duration-300 ease-in-out transform hover:scale-105" data-rating="8.8" data-update="20230810" data-site-rating="8.9">
+                <img src="https://i.ibb.co/44R3nCP/sons-of-anarchy-zmwcl9jv09kmdvx3.webp" alt="Sons of Anarchy" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-semibold text-white" style="font-size: 14px;">Sons of Anarchy 2007</h4>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="IMDb" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.6</span>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" alt="Site" class="w-6 h-6 mr-1">
+                                <span class="text-white">8.1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm mt-2">Genre: Crime, Drama</p>
+                </div>
+                <div class="summary-overlay">An outlaw motorcycle clubs fights to protect their town and way of life.</div>
+            </a>
+        </div>
+        
+        <!-- Pagination -->
+        <div id="pagination" class="pagination">
+            <button id="prevPage" class="btn-42" onclick="changePage(currentPage - 1)">Prev</button>
+            <div id="paginationNumbers" class="mx-2"></div>
+            <button id="nextPage" class="btn-42" onclick="changePage(currentPage + 1)">Next</button>
+        </div>
 
     </main>
 
