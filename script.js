@@ -46,7 +46,7 @@ window.onload = function() {
         const cards = document.querySelectorAll('.card');
         const currentPath = window.location.pathname;
 
-        // تعریف دسته‌بندی بر اساس مسیر URL
+        // شناسایی دسته‌بندی بر اساس مسیر URL
         let targetCategory = '';
         if (currentPath.includes("/movies")) {
             targetCategory = 'movies';
@@ -61,6 +61,8 @@ window.onload = function() {
         // فیلتر کردن کارت‌ها بر اساس data-category
         cards.forEach(card => {
             const category = card.getAttribute("data-category");
+
+            // بررسی و نمایش کارت‌ها بر اساس دسته‌بندی
             if (category === targetCategory) {
                 card.style.display = "block";
             } else {
@@ -68,7 +70,7 @@ window.onload = function() {
             }
         });
 
-        // نمایش صفحه کنونی
+        // تنظیم و نمایش صفحه کنونی
         const params = new URLSearchParams(window.location.search);
         const pageParam = params.get('page');
         currentPage = pageParam ? parseInt(pageParam) : 1;
@@ -79,6 +81,7 @@ window.onload = function() {
         window.location.href = '../login.html';
     }
 };
+
 
 
 
