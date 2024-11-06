@@ -1,5 +1,5 @@
 let currentPage = 1;
-const cardsPerPage = 2;
+const cardsPerPage = 5;
 
 let sortOrder = {
     latest: true,
@@ -44,45 +44,34 @@ window.onload = function() {
         skeletons.style.display = 'none';
 
         const cards = document.querySelectorAll('.card');
-        const currentPath = window.location.pathname;
-
-        // شناسایی دسته‌بندی بر اساس مسیر URL
-        let targetCategory = '';
-        if (currentPath.includes("/movies")) {
-            targetCategory = 'movies';
-        } else if (currentPath.includes("/series")) {
-            targetCategory = 'series';
-        } else if (currentPath.includes("/anime")) {
-            targetCategory = 'anime';
-        } else if (currentPath.includes("/irani")) {
-            targetCategory = 'irani';
-        }
-
-        // فیلتر کردن کارت‌ها بر اساس data-category
         cards.forEach(card => {
-            const category = card.getAttribute("data-category");
-
-            // بررسی و نمایش کارت‌ها بر اساس دسته‌بندی
-            if (category === targetCategory) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
+            card.style.display = 'block';
         });
 
-        // تنظیم و نمایش صفحه کنونی
         const params = new URLSearchParams(window.location.search);
         const pageParam = params.get('page');
         currentPage = pageParam ? parseInt(pageParam) : 1;
 
         showPage(currentPage);
 
+        // کد فیلتر کردن بر اساس URL
+        const currentPath = window.location.pathname;
+        cards.forEach(card => {
+            const href = card.getAttribute("href");
+            if (currentPath.includes("/movies") && !href.includes("movies")) {
+                card.style.display = "none";
+            } else if (currentPath.includes("/series") && !href.includes("series")) {
+                card.style.display = "none";
+            } else if (currentPath.includes("/anime") && !href.includes("anime")) {
+                card.style.display = "none";
+            } else if (currentPath.includes("/irani") && !href.includes("irani")) {
+                card.style.display = "none";
+            }
+        });
     } else {
         window.location.href = '../login.html';
     }
 };
-
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
