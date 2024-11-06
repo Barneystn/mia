@@ -291,3 +291,10 @@
 .text-orange-600 {
     color: #dd6b20; /* رنگ متناسب با bg-orange-600 */
 }
+
+custom-badge {
+    font-size: 0.7rem; /* اندازه نوشته را کوچک می‌کند */
+    padding: 0.25rem 0.5rem; /* فاصله داخلی نشانگر را کاهش می‌دهد */
+    position: relative; 
+    top: -0.25rem; /* نوشته را به سمت بالا منتقل می‌کند */
+}
