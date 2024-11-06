@@ -1,1 +1,57 @@
-jhhh
+<!DOCTYPE html>
+<html lang="en" data-theme="retro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nimbox</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row animate-fade-in">
+        <!-- اطلاعات فیلم -->
+        <div class="p-6 flex flex-col justify-center w-full md:w-1/2 text-white animate-slide-in-left text-right rtl">
+            <h1 class="text-2xl font-bold mb-4">نام فیلم</h1>
+            <p class="text-gray-400 mb-4">
+                خلاصه‌ای کوتاه از فیلم. این بخش می‌تواند توضیحاتی در مورد داستان و جزئیات فیلم باشد. فیلمی که شما را به دنیایی جدید می‌برد و تجربه‌ای خاص فراهم می‌کند.
+            </p>
+            <ul class="text-gray-400 space-y-2">
+                <li><strong>ژانر:</strong> درام، ماجراجویی</li>
+                <li><strong>سال تولید:</strong> 2023</li>
+                <li><strong>امتیاز:</strong> 8.5/10</li>
+                <li><strong>مدت زمان:</strong> 2 ساعت و 30 دقیقه</li>
+            </ul>
+        </div>
+        <!-- عکس فیلم -->
+        <div class="w-full md:w-1/2">
+            <img src="https://i.ibb.co/1JqZymT/supernatural-castiel-dean-and-sam-fi61lb0dkhpwdt4j.webp" alt="پوستر فیلم" class="object-cover w-full h-full animate-slide-in-right">
+        </div>
+    </div>
+
+    <style>
+        /* تعریف انیمیشن‌ها */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slide-in-left {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slide-in-right {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-fade-in { animation: fade-in 0.8s ease-in-out; }
+        .animate-slide-in-left { animation: slide-in-left 0.8s ease-in-out; }
+        .animate-slide-in-right { animation: slide-in-right 0.8s ease-in-out; }
+    </style>
+</body>
+</html>
