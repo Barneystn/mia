@@ -1,4 +1,6 @@
-
+.card {
+    display: none;
+}
 
 /* Reset Styles */
 * {
