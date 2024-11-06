@@ -38,29 +38,37 @@ function eraseCookie(name) {
 window.onload = function() {
     const isLoggedIn = getCookie('isLoggedIn');
     if (isLoggedIn === 'true') {
+        document.body.style.display = 'block';
 
         const skeletons = document.getElementById('skeletons');
         skeletons.style.display = 'none';
 
         const cards = document.querySelectorAll('.card');
-
-        // فیلتر کردن کارت‌ها بر اساس URL و data-category
         const currentPath = window.location.pathname;
+
+        // تعریف دسته‌بندی بر اساس مسیر URL
+        let targetCategory = '';
+        if (currentPath.includes("/movies")) {
+            targetCategory = 'movies';
+        } else if (currentPath.includes("/series")) {
+            targetCategory = 'series';
+        } else if (currentPath.includes("/anime")) {
+            targetCategory = 'anime';
+        } else if (currentPath.includes("/irani")) {
+            targetCategory = 'irani';
+        }
+
+        // فیلتر کردن کارت‌ها بر اساس data-category
         cards.forEach(card => {
             const category = card.getAttribute("data-category");
-            if (currentPath.includes("/movies") && category !== "movies") {
-                card.style.display = "none";
-            } else if (currentPath.includes("/series") && category !== "series") {
-                card.style.display = "none";
-            } else if (currentPath.includes("/anime") && category !== "anime") {
-                card.style.display = "none";
-            } else if (currentPath.includes("/irani") && category !== "irani") {
-                card.style.display = "none";
+            if (category === targetCategory) {
+                card.style.display = "block";
             } else {
-                card.style.display = "block"; // نمایش کارت‌های مرتبط
+                card.style.display = "none";
             }
         });
 
+        // نمایش صفحه کنونی
         const params = new URLSearchParams(window.location.search);
         const pageParam = params.get('page');
         currentPage = pageParam ? parseInt(pageParam) : 1;
@@ -71,6 +79,7 @@ window.onload = function() {
         window.location.href = '../login.html';
     }
 };
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
