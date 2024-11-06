@@ -8,16 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/style.css">
     <script src="/script.js"></script>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-15HFEJ3DK5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-15HFEJ3DK5');
-</script>
-
 </head>
 <body class="fade-in drawer">
     <div class="drawer">
@@ -70,23 +60,6 @@
                     </ul>
                 </div>
 
-                <div class="flex justify-end w-full">
-                    <div class="join mr-3">
-                        <div>
-                            <input id="search-input" class="input input-primary input-sm w-full max-w-xs join-item" placeholder="Search" />
-                        </div>
-                        <select id="filter-select" class="select select-primary select-sm w-full max-w-xs join-item">
-                            <option value="all" selected>All</option>
-                            <option value="movies">Movies</option>
-                            <option value="series">Series</option>
-                            <option value="anime">Anime</option>
-                            <option value="irani">Irani</option>
-                        </select>
-                        <div class="indicator">
-                            <span class="indicator-item badge badge-secondary">Go</span>
-                            <button id="search-button" class="btn btn-primary btn-sm join-item" onclick="filterMovies()" disabled>Search</button>
-                        </div>
-                    </div>
       
                         <!-- Theme Toggle -->
                         <label class="swap swap-rotate">
@@ -181,16 +154,6 @@
         .animate-slide-in-left { animation: slide-in-left 0.8s ease-in-out; }
         .animate-slide-in-right { animation: slide-in-right 0.8s ease-in-out; }
     </style>
-
-        
-        
-        
-        <!-- Pagination -->
-        <div id="pagination" class="pagination">
-            <button id="prevPage" class="btn-42" onclick="changePage(currentPage - 1)">Prev</button>
-            <div id="paginationNumbers" class="mx-2"></div>
-            <button id="nextPage" class="btn-42" onclick="changePage(currentPage + 1)">Next</button>
-        </div>
 
     </main>
 
