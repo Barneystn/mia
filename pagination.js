@@ -1,5 +1,5 @@
 let currentPage = 1;
-const cardsPerPage = 5;
+const cardsPerPage = 2;
 
 function showPage(page, filteredMovies = null) {
     const movieList = filteredMovies || Array.from(document.querySelectorAll('#movie-list .card'));
