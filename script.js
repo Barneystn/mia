@@ -1,5 +1,5 @@
 let currentPage = 1;
-const cardsPerPage = 2;
+const cardsPerPage = 5;
 
 window.onload = function() {
     document.body.style.display = 'block';
@@ -35,6 +35,8 @@ function showPage(page) {
     const cards = Array.from(document.querySelectorAll('.card:not([style*="display: none"])'));
     const totalPages = Math.ceil(cards.length / cardsPerPage);
 
+    if (page < 1 || page > totalPages) return;  // جلوگیری از صفحه‌های نامعتبر
+
     cards.forEach((card, index) => {
         card.style.display = (index >= (page - 1) * cardsPerPage && index < page * cardsPerPage) ? 'block' : 'none';
     });
@@ -63,13 +65,8 @@ function renderPagination(totalPages) {
     prevPageButton.disabled = currentPage === 1;
     nextPageButton.disabled = currentPage === totalPages;
 
-    prevPageButton.onclick = () => {
-        if (currentPage > 1) showPage(currentPage - 1);
-    };
-
-    nextPageButton.onclick = () => {
-        if (currentPage < totalPages) showPage(currentPage + 1);
-    };
+    prevPageButton.onclick = () => showPage(currentPage - 1);
+    nextPageButton.onclick = () => showPage(currentPage + 1);
 }
 
 function filterMovies() {
