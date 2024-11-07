@@ -1,20 +1,20 @@
-let currentPage = 1;
-const cardsPerPage = 2;
+let currentPage = 1;  // صفحه جاری
+const cardsPerPage = 5;  // تعداد کارت‌ها در هر صفحه
 
-window.onload = function() {
+window.onload = function () {
+    // نمایش محتوای صفحه
     document.body.style.display = 'block';
-
     const skeletons = document.getElementById('skeletons');
     skeletons.style.display = 'none';
 
     const params = new URLSearchParams(window.location.search);
-    currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
-
+    currentPage = params.get('page') ? parseInt(params.get('page')) : 1; // صفحه از URL گرفته می‌شود
     applyFilters();
-    showPage(currentPage);
+    showPage(currentPage);  // صفحه مورد نظر را نمایش می‌دهیم
 };
 
 function applyFilters() {
+    // فیلتر کردن کارت‌ها بر اساس مسیر
     const currentPath = window.location.pathname;
     const cards = document.querySelectorAll('.card');
 
@@ -32,33 +32,45 @@ function applyFilters() {
 }
 
 function showPage(page) {
-    const cards = Array.from(document.querySelectorAll('.card:not([style*="display: none"])'));
-    const totalPages = Math.ceil(cards.length / cardsPerPage);
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const totalPages = Math.ceil(cards.length / cardsPerPage);  // تعداد کل صفحات
 
-    if (page < 1 || page > totalPages) return;  // جلوگیری از صفحه‌های نامعتبر
+    // جلوگیری از رفتن به صفحه‌های نامعتبر
+    if (page < 1 || page > totalPages) return;
 
-    cards.forEach((card, index) => {
-        card.style.display = (index >= (page - 1) * cardsPerPage && index < page * cardsPerPage) ? 'block' : 'none';
-    });
+    // مخفی کردن همه کارت‌ها
+    cards.forEach(card => card.style.display = 'none');
 
-    currentPage = page;
-    renderPagination(totalPages);
+    // محاسبه و نمایش کارت‌ها برای صفحه انتخابی
+    const start = (page - 1) * cardsPerPage;
+    const end = start + cardsPerPage;
 
+    for (let i = start; i < end && i < cards.length; i++) {
+        cards[i].style.display = 'block';
+    }
+
+    currentPage = page;  // به‌روزرسانی صفحه جاری
+    renderPagination(totalPages);  // به‌روزرسانی دکمه‌های صفحه‌بندی
+
+    // به‌روزرسانی URL برای ذخیره صفحه
     window.history.pushState({ page: page }, '', `?page=${page}`);
 }
 
 function renderPagination(totalPages) {
     const paginationContainer = document.getElementById('paginationNumbers');
-    paginationContainer.innerHTML = '';
+    paginationContainer.innerHTML = '';  // پاک کردن شماره‌های صفحه قبلی
 
+    // ایجاد شماره‌های صفحه
     for (let i = 1; i <= totalPages; i++) {
         const pageLink = document.createElement('span');
         pageLink.innerText = i;
-        pageLink.classList.add('page-number', i === currentPage ? 'active-page' : '');
+        pageLink.classList.add('page-number');
+        if (i === currentPage) pageLink.classList.add('active-page');
         pageLink.onclick = () => showPage(i);
         paginationContainer.appendChild(pageLink);
     }
 
+    // مدیریت دکمه‌های قبلی و بعدی
     const prevPageButton = document.getElementById('prevPage');
     const nextPageButton = document.getElementById('nextPage');
 
@@ -82,8 +94,9 @@ function filterMovies() {
         return matchesCategory && matchesSearch;
     });
 
+    // مخفی کردن کارت‌ها و نمایش اسکلت‌ها
     filteredMovies.forEach(movie => movie.style.display = 'block');
-    showPage(1);
+    showPage(1);  // نمایش نتایج فیلتر شده از صفحه اول
 }
 
 document.querySelector('#search-input').addEventListener('input', filterMovies);
