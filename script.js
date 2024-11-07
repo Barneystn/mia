@@ -36,7 +36,7 @@ window.onload = function() {
         } else if (currentPath.includes("/irani")) {
             return href.includes("irani");
         }
-        return true; // اگر هیچ مسیر خاصی وجود ندارد، همه کارت‌ها را نشان می‌دهد
+        return false; // اگر هیچ مسیر خاصی وجود ندارد، همه کارت‌ها را نشان می‌دهد
     });
 
     // نمایش صفحه بر اساس کارت‌های فیلتر شده
