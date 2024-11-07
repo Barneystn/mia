@@ -280,3 +280,5 @@ document.querySelector('#search-input').addEventListener('keypress', function(ev
         filterMovies();
     }
 });
+
+
