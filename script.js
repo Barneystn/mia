@@ -14,7 +14,7 @@ window.onload = function() {
     const skeletons = document.getElementById('skeletons');
     skeletons.style.display = 'none';
 
-    const cards = document.querySelectorAll('.card');
+    const cards = Array.from(document.querySelectorAll('.card'));
     cards.forEach(card => {
         card.style.display = 'block';
     });
@@ -23,23 +23,26 @@ window.onload = function() {
     const pageParam = params.get('page');
     currentPage = pageParam ? parseInt(pageParam) : 1;
 
-    showPage(currentPage);
-
-    // کد فیلتر کردن بر اساس URL
+    // فیلتر کردن کارت‌ها بر اساس URL
     const currentPath = window.location.pathname;
-    cards.forEach(card => {
+    const filteredCards = cards.filter(card => {
         const href = card.getAttribute("href");
-        if (currentPath.includes("/movies") && !href.includes("movies")) {
-            card.style.display = "none";
-        } else if (currentPath.includes("/series") && !href.includes("series")) {
-            card.style.display = "none";
-        } else if (currentPath.includes("/anime") && !href.includes("anime")) {
-            card.style.display = "none";
-        } else if (currentPath.includes("/irani") && !href.includes("irani")) {
-            card.style.display = "none";
+        if (currentPath.includes("/movies")) {
+            return href.includes("movies");
+        } else if (currentPath.includes("/series")) {
+            return href.includes("series");
+        } else if (currentPath.includes("/anime")) {
+            return href.includes("anime");
+        } else if (currentPath.includes("/irani")) {
+            return href.includes("irani");
         }
+        return true; // اگر هیچ مسیر خاصی وجود ندارد، همه کارت‌ها را نشان می‌دهد
     });
+
+    // نمایش صفحه بر اساس کارت‌های فیلتر شده
+    showPage(currentPage, filteredCards);
 };
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
