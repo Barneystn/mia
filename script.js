@@ -27,22 +27,19 @@ window.onload = function() {
 
     // کد فیلتر کردن بر اساس URL
     const currentPath = window.location.pathname;
-let filteredCards = [];
-
-cards.forEach(card => {
-    const href = card.getAttribute("href");
-    const matchesCategory = (currentPath.includes("/movies") && href.includes("movies")) ||
-                            (currentPath.includes("/series") && href.includes("series")) ||
-                            (currentPath.includes("/anime") && href.includes("anime")) ||
-                            (currentPath.includes("/irani") && href.includes("irani"));
-
-    if (matchesCategory) {
-        filteredCards.push(card);
-    }
-});
-
-showPage(currentPage, filteredCards);
-
+    cards.forEach(card => {
+        const href = card.getAttribute("href");
+        if (currentPath.includes("/movies") && !href.includes("movies")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/series") && !href.includes("series")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/anime") && !href.includes("anime")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/irani") && !href.includes("irani")) {
+            card.style.display = "none";
+        }
+    });
+};
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -95,25 +92,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showPage(page, filteredMovies = null) {
     const movieList = filteredMovies || Array.from(document.querySelectorAll('#movie-list .card'));
+    const displayedCards = Math.min(movieList.length, cardsPerPage); // تعداد کارت‌های نمایش داده‌شده
     const totalPages = Math.ceil(movieList.length / cardsPerPage);
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('movie-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     movieList.forEach(card => card.style.display = 'none');
 
     const start = (page - 1) * cardsPerPage;
-    const end = start + cardsPerPage; // تغییر به مقدار ثابت cardsPerPage
-
+    const end = start + displayedCards; // استفاده از تعداد کارت‌های فیلتر شده
     for (let i = start; i < end && i < movieList.length; i++) {
         movieList[i].style.display = 'block';
     }
 
-    currentPage = page;
+    currentPage = page; 
     renderPagination(totalPages);
 
     window.history.pushState({ page: page }, '', `?page=${page}`);
 }
-
 
 
 function renderPagination(totalPages) {
