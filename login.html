@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
-        // تنظیم کوکی برای session
-        function setSessionCookie(name, value) {
-            document.cookie = `${name}=${value}; path=/;`;
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value}; path=/; expires=${date.toUTCString()};`;
         }
 
-        // خواندن کوکی
-        function getSessionCookie(name) {
+        function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
@@ -20,29 +21,15 @@
         }
 
         function validateLogin() {
-            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const validPassword = 'nimleecher7';
+            const encryptedPassword = CryptoJS.AES.encrypt(validPassword, 'secret-key').toString();
 
-            // مشخصات ورود
-            const validUsername = 'nimbox';
-            const validPassword = 'nimbox7';
-
-            // بررسی ورود
-            if (username === validUsername && password === validPassword) {
-                // ذخیره وضعیت ورود در کوکی session
-                setSessionCookie('isLoggedIn', 'true');
-                window.location.href = 'index.html'; // هدایت به صفحه اصلی
+            if (password === validPassword) {
+                setCookie('authToken', encryptedPassword, 7);
+                window.location.href = 'index.html';
             } else {
-                alert('Invalid username or password'); // پیام خطا
-            }
-        }
-
-        // بررسی وضعیت ورود در صورت نیاز در صفحه دیگر
-        function checkLoginStatus() {
-            const isLoggedIn = getSessionCookie('isLoggedIn');
-            if (isLoggedIn !== 'true') {
-                alert('Please log in first');
-                window.location.href = 'login.html'; // هدایت به صفحه ورود
+                alert('Invalid password');
             }
         }
     </script>
@@ -51,14 +38,10 @@
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
         <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
         <div class="mb-4">
-            <label for="username" class="block text-sm font-semibold">Username:</label>
-            <input type="text" id="username" class="mt-1 p-2 w-full bg-gray-700 rounded transition duration-200 focus:outline-none focus:ring focus:ring-blue-500" placeholder="Enter your username" required>
-        </div>
-        <div class="mb-4">
             <label for="password" class="block text-sm font-semibold">Password:</label>
-            <input type="password" id="password" class="mt-1 p-2 w-full bg-gray-700 rounded transition duration-200 focus:outline-none focus:ring focus:ring-blue-500" placeholder="Enter your password" required>
+            <input type="password" id="password" class="mt-1 p-2 w-full bg-gray-700 rounded focus:outline-none" placeholder="Enter your password" required>
         </div>
-        <button onclick="validateLogin()" class="w-full bg-blue-600 p-2 rounded hover:bg-blue-500 transition duration-200">Login</button>
+        <button onclick="validateLogin()" class="w-full bg-blue-600 p-2 rounded hover:bg-blue-500">Login</button>
     </div>
 </body>
 </html>
