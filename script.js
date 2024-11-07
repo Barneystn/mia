@@ -36,12 +36,18 @@ window.onload = function() {
         } else if (currentPath.includes("/irani")) {
             return href.includes("irani");
         }
-        return false; // اگر هیچ مسیر خاصی وجود ندارد، همه کارت‌ها را نشان می‌دهد
+        return true;
     });
 
-    // نمایش صفحه بر اساس کارت‌های فیلتر شده
-    showPage(currentPage, filteredCards);
+    // اگر کارت‌های فیلتر شده خالی بودند، movie-list را مخفی کن یا پیام نمایش بده
+    const movieList = document.getElementById('movie-list');
+    if (filteredCards.length === 0) {
+        movieList.innerHTML = '<p class="text-center text-white">موردی یافت نشد</p>';
+    } else {
+        showPage(currentPage, filteredCards);
+    }
 };
+
 
 
 
