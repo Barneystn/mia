@@ -7,7 +7,6 @@ let sortOrder = {
     'site-rated': true
 };
 
-
 window.onload = function() {
     document.body.style.display = 'block';
 
@@ -41,7 +40,6 @@ window.onload = function() {
     });
 };
 
-
 document.addEventListener('DOMContentLoaded', function () {
     // چک می‌کند که آیا تم قبلاً ذخیره شده است یا خیر
     const savedTheme = localStorage.getItem('theme') || 'retro';
@@ -57,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
     });
-
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -88,29 +85,28 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleSearchButton();
 });
 
-
-
 function showPage(page, filteredMovies = null) {
     const movieList = filteredMovies || Array.from(document.querySelectorAll('#movie-list .card'));
-    const displayedCards = Math.min(movieList.length, cardsPerPage); // تعداد کارت‌های نمایش داده‌شده
-    const totalPages = Math.ceil(movieList.length / cardsPerPage);
+    const totalCards = movieList.length;
+    const totalPages = Math.ceil(totalCards / cardsPerPage);
 
-    document.getElementById('movie-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+    // پنهان کردن تمام کارت‌ها
     movieList.forEach(card => card.style.display = 'none');
 
     const start = (page - 1) * cardsPerPage;
-    const end = start + displayedCards; // استفاده از تعداد کارت‌های فیلتر شده
-    for (let i = start; i < end && i < movieList.length; i++) {
+    const end = Math.min(start + cardsPerPage, totalCards); // محاسبه نقطه پایانی با توجه به تعداد کارت‌های فیلتر شده
+
+    // نمایش کارت‌های صفحه جاری
+    for (let i = start; i < end; i++) {
         movieList[i].style.display = 'block';
     }
 
     currentPage = page; 
     renderPagination(totalPages);
 
+    // به‌روزرسانی URL برای صفحه فعلی
     window.history.pushState({ page: page }, '', `?page=${page}`);
 }
-
 
 function renderPagination(totalPages) {
     const paginationContainer = document.getElementById('paginationNumbers');
@@ -191,7 +187,6 @@ function changePage(page) {
     }, 1000); // یک ثانیه تاخیر قبل از نمایش کارت‌ها
 }
 
-
 function filterMovies() {
     const searchTerm = document.querySelector('#search-input').value.toLowerCase();
     const selectedFilter = document.querySelector('#filter-select').value.toLowerCase();
@@ -199,16 +194,16 @@ function filterMovies() {
 
     let matchedMovies = [];
 
-    // پنهان کردن کارت‌ها و نشان دادن اسکلت‌ها
-    document.getElementById('movie-list').classList.add('hidden');
-    document.getElementById('skeletonsx').classList.remove('hidden');
+    // نمایش اسکلت‌ها و پنهان‌سازی کارت‌ها برای مدت کوتاه
+    document.getElementById('movie-list').style.display = 'none';
+    document.getElementById('skeletonsx').style.display = 'flex';
 
-    // تأخیر یک ثانیه‌ای برای نشان دادن اسکلت‌ها
     setTimeout(function() {
         movies.forEach(movie => {
             const title = movie.querySelector('h4').textContent.toLowerCase();
-            
             let category = '';
+
+            // تعیین دسته‌بندی هر کارت بر اساس `href`
             if (movie.href.includes('movies')) {
                 category = 'movies';
             } else if (movie.href.includes('series')) {
@@ -219,27 +214,23 @@ function filterMovies() {
                 category = 'irani';
             }
 
+            // بررسی انطباق با جستجو و فیلتر
             const matchesFilter = (selectedFilter === 'all') || (selectedFilter === category);
             const matchesSearch = title.includes(searchTerm);
 
             if (matchesFilter && matchesSearch) {
                 matchedMovies.push(movie);
-                movie.style.display = 'block';
-            } else {
-                movie.style.display = 'none';
             }
         });
 
-        // پنهان کردن اسکلت‌ها و نشان دادن کارت‌ها
-        document.getElementById('skeletonsx').classList.add('hidden');
-        document.getElementById('movie-list').classList.remove('hidden');
-
-        // به صفحه اول برگردید و نتایج فیلتر شده را نمایش دهید
+        // پس از فیلتر کردن، کارت‌های تطبیق یافته را به صفحه اول نمایش دهید
         showPage(1, matchedMovies);
-    }, 1000); // یک ثانیه
+
+        // مخفی‌سازی اسکلت‌ها و نمایش کارت‌ها
+        document.getElementById('skeletonsx').style.display = 'none';
+        document.getElementById('movie-list').style.display = 'grid';
+    }, 1000); // مدت زمان تاخیر برای نمایش اسکلت‌ها
 }
-
-
 
 function sortMovies(criteria) {
     const movieList = document.getElementById('movie-list');
@@ -260,23 +251,12 @@ function sortMovies(criteria) {
         return sortOrder[criteria] ? bValue - aValue : aValue - bValue;
     });
 
+    movies.forEach(movie => movieList.appendChild(movie));
+
+    // نمایش یا مخفی‌کردن کارت‌ها بر اساس فیلتر
+    filterMovies();
+
+    // تغییر وضعیت ترتیب برای دفعه بعد
     sortOrder[criteria] = !sortOrder[criteria];
-
-    movieList.innerHTML = '';
-        movies.forEach(movie => {
-            movie.classList.remove('fade-out');
-            movie.classList.add('fade-in');
-            movieList.appendChild(movie);
-        });
-
-    showPage(currentPage);
-    }, 500);
+    }, 300);
 }
-
-// رویدادها
-document.querySelector('#search-input').addEventListener('input', filterMovies);
-document.querySelector('#search-input').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        filterMovies();
-    }
-});
