@@ -9,16 +9,6 @@ let sortOrder = {
 
 
 window.onload = function() {
-    document.body.style.display = 'block';
-
-    const skeletons = document.getElementById('skeletons');
-    skeletons.style.display = 'none';
-
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.style.display = 'block';
-    });
-
     const params = new URLSearchParams(window.location.search);
     const pageParam = params.get('page');
     currentPage = pageParam ? parseInt(pageParam) : 1;
@@ -95,7 +85,7 @@ function showPage(page, filteredMovies = null) {
     const displayedCards = Math.min(movieList.length, cardsPerPage); // تعداد کارت‌های نمایش داده‌شده
     const totalPages = Math.ceil(movieList.length / cardsPerPage);
 
-    document.getElementById('movie-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     movieList.forEach(card => card.style.display = 'none');
 
