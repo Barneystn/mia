@@ -15,3 +15,33 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+    const movieList = document.getElementById('movie-list');
+    const allCards = movieList.querySelectorAll('.card');
+
+    const categoryMap = {
+        '/movies': 'movies',
+        '/series': 'series',
+        '/anime': 'anime',
+        '/irani': 'irani',
+    };
+
+    const selectedCategory = categoryMap[currentPath];
+
+    if (selectedCategory) {
+        allCards.forEach(card => {
+            if (card.dataset.category !== selectedCategory) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = 'block';
+            }
+        });
+    } else {
+        allCards.forEach(card => {
+            card.style.display = 'block'; // نمایش همه کارت‌ها در صفحه اصلی یا صفحات دیگر
+        });
+    }
+});
