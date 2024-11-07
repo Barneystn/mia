@@ -1,5 +1,5 @@
 let currentPage = 1;  // صفحه جاری
-const cardsPerPage = 5;  // تعداد کارت‌ها در هر صفحه
+const cardsPerPage = 1;  // تعداد کارت‌ها در هر صفحه
 
 window.onload = function () {
     // نمایش محتوای صفحه
