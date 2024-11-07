@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const allCards = movieList.querySelectorAll('.card');
 
     const categoryMap = {
-        '/movies/n': 'movies',
+        '/movies': 'movies',
         '/series': 'series',
-        '/anime/n': 'anime',
+        '/anime': 'anime',
         '/irani': 'irani',
     };
 
