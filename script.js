@@ -1,5 +1,5 @@
 let currentPage = 1;
-const cardsPerPage = 1;
+const cardsPerPage = 2;
 
 let sortOrder = {
     latest: true,
