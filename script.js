@@ -1,5 +1,5 @@
 let currentPage = 1;
-const cardsPerPage = 2;
+const cardsPerPage = 5;
 
 window.onload = function() {
     document.body.style.display = 'block';
@@ -13,20 +13,6 @@ window.onload = function() {
     applyFilters();
     showPage(currentPage);
 };
-
-document.addEventListener('DOMContentLoaded', function () {
-    const savedTheme = localStorage.getItem('theme') || 'retro';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-
-    const themeController = document.getElementById('theme-controller');
-    themeController.checked = savedTheme === 'forest';
-
-    themeController.addEventListener('change', function () {
-        const newTheme = themeController.checked ? 'forest' : 'retro';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-    });
-});
 
 function applyFilters() {
     const currentPath = window.location.pathname;
@@ -45,8 +31,8 @@ function applyFilters() {
     });
 }
 
-function showPage(page, filteredMovies = null) {
-    const cards = filteredMovies || Array.from(document.querySelectorAll('.card:not([style*="display: none"])'));
+function showPage(page) {
+    const cards = Array.from(document.querySelectorAll('.card:not([style*="display: none"])'));
     const totalPages = Math.ceil(cards.length / cardsPerPage);
 
     cards.forEach((card, index) => {
@@ -70,6 +56,20 @@ function renderPagination(totalPages) {
         pageLink.onclick = () => showPage(i);
         paginationContainer.appendChild(pageLink);
     }
+
+    const prevPageButton = document.getElementById('prevPage');
+    const nextPageButton = document.getElementById('nextPage');
+
+    prevPageButton.disabled = currentPage === 1;
+    nextPageButton.disabled = currentPage === totalPages;
+
+    prevPageButton.onclick = () => {
+        if (currentPage > 1) showPage(currentPage - 1);
+    };
+
+    nextPageButton.onclick = () => {
+        if (currentPage < totalPages) showPage(currentPage + 1);
+    };
 }
 
 function filterMovies() {
@@ -85,7 +85,8 @@ function filterMovies() {
         return matchesCategory && matchesSearch;
     });
 
-    showPage(1, filteredMovies);
+    filteredMovies.forEach(movie => movie.style.display = 'block');
+    showPage(1);
 }
 
 document.querySelector('#search-input').addEventListener('input', filterMovies);
