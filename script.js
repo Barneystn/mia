@@ -14,21 +14,46 @@ window.onload = function () {
 };
 
 function applyFilters() {
-    // فیلتر کردن کارت‌ها بر اساس مسیر
-    const currentPath = window.location.pathname;
+    const searchTerm = document.querySelector('#search-input').value.toLowerCase();
+    const selectedFilter = document.querySelector('#filter-select').value.toLowerCase();
     const cards = document.querySelectorAll('.card');
 
     cards.forEach(card => {
-        const href = card.getAttribute("href");
-        if ((currentPath.includes("/movies") && !href.includes("movies")) ||
-            (currentPath.includes("/series") && !href.includes("series")) ||
-            (currentPath.includes("/anime") && !href.includes("anime")) ||
-            (currentPath.includes("/irani") && !href.includes("irani"))) {
-            card.style.display = "none";
+        const title = card.querySelector('h4').textContent.toLowerCase();
+        const href = card.getAttribute('href');
+        
+        // دسته‌بندی کارت‌ها
+        const isMovie = href.includes('movies');
+        const isSeries = href.includes('series');
+        const isAnime = href.includes('anime');
+        const isIrani = href.includes('irani');
+
+        // بررسی مطابقت با فیلتر
+        let matchesCategory = false;
+        if (selectedFilter === 'all') {
+            matchesCategory = true;  // همه‌ی دسته‌ها را نشان می‌دهد
+        } else if (selectedFilter === 'movies' && isMovie) {
+            matchesCategory = true;
+        } else if (selectedFilter === 'series' && isSeries) {
+            matchesCategory = true;
+        } else if (selectedFilter === 'anime' && isAnime) {
+            matchesCategory = true;
+        } else if (selectedFilter === 'irani' && isIrani) {
+            matchesCategory = true;
+        }
+
+        const matchesSearch = title.includes(searchTerm);
+        
+        // اگر دسته‌بندی و جستجو مطابقت داشتند، نمایش داده می‌شود
+        if (matchesCategory && matchesSearch) {
+            card.style.display = 'block';
         } else {
-            card.style.display = "block";
+            card.style.display = 'none';
         }
     });
+
+    // بعد از اعمال فیلترها، صفحه اول را نشان می‌دهیم
+    showPage(1);
 }
 
 function showPage(page) {
@@ -89,15 +114,46 @@ function filterMovies() {
     const filteredMovies = movies.filter(movie => {
         const title = movie.querySelector('h4').textContent.toLowerCase();
         const href = movie.getAttribute('href');
-        const matchesCategory = selectedFilter === 'all' || href.includes(selectedFilter);
+        
+        // دسته‌بندی‌ها
+        const isMovie = href.includes('movies');
+        const isSeries = href.includes('series');
+        const isAnime = href.includes('anime');
+        const isIrani = href.includes('irani');
+
+        let matchesCategory = false;
+        if (selectedFilter === 'all') {
+            matchesCategory = true;  // همه‌ی دسته‌ها را نشان می‌دهد
+        } else if (selectedFilter === 'movies' && isMovie) {
+            matchesCategory = true;
+        } else if (selectedFilter === 'series' && isSeries) {
+            matchesCategory = true;
+        } else if (selectedFilter === 'anime' && isAnime) {
+            matchesCategory = true;
+        } else if (selectedFilter === 'irani' && isIrani) {
+            matchesCategory = true;
+        }
+
         const matchesSearch = title.includes(searchTerm);
+        
         return matchesCategory && matchesSearch;
     });
 
     // مخفی کردن کارت‌ها و نمایش اسکلت‌ها
-    filteredMovies.forEach(movie => movie.style.display = 'block');
-    showPage(1);  // نمایش نتایج فیلتر شده از صفحه اول
+    document.getElementById('movie-list').classList.add('hidden');
+    document.getElementById('skeletonsx').classList.remove('hidden');
+
+    setTimeout(function () {
+        filteredMovies.forEach(movie => movie.style.display = 'block');
+        // پنهان کردن اسکلت‌ها و نشان دادن کارت‌ها
+        document.getElementById('skeletonsx').classList.add('hidden');
+        document.getElementById('movie-list').classList.remove('hidden');
+
+        // به صفحه اول برگردید و نتایج فیلتر شده را نمایش دهید
+        showPage(1);
+    }, 1000); // یک ثانیه تاخیر
 }
 
+// رویدادها
 document.querySelector('#search-input').addEventListener('input', filterMovies);
 document.querySelector('#search-button').addEventListener('click', filterMovies);
