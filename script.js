@@ -1,5 +1,5 @@
 let currentPage = 1;
-const cardsPerPage = 2;
+const cardsPerPage = 5;
 
 let sortOrder = {
     latest: true,
@@ -14,7 +14,7 @@ window.onload = function() {
     const skeletons = document.getElementById('skeletons');
     skeletons.style.display = 'none';
 
-    const cards = Array.from(document.querySelectorAll('.card'));
+    const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
         card.style.display = 'block';
     });
@@ -23,32 +23,23 @@ window.onload = function() {
     const pageParam = params.get('page');
     currentPage = pageParam ? parseInt(pageParam) : 1;
 
-    // فیلتر کردن کارت‌ها بر اساس URL
+    showPage(currentPage);
+
+    // کد فیلتر کردن بر اساس URL
     const currentPath = window.location.pathname;
-    const filteredCards = cards.filter(card => {
+    cards.forEach(card => {
         const href = card.getAttribute("href");
-        if (currentPath.includes("/movies")) {
-            return href.includes("movies");
-        } else if (currentPath.includes("/series")) {
-            return href.includes("series");
-        } else if (currentPath.includes("/anime")) {
-            return href.includes("anime");
-        } else if (currentPath.includes("/irani")) {
-            return href.includes("irani");
+        if (currentPath.includes("/movies") && !href.includes("movies")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/series") && !href.includes("series")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/anime") && !href.includes("anime")) {
+            card.style.display = "none";
+        } else if (currentPath.includes("/irani") && !href.includes("irani")) {
+            card.style.display = "none";
         }
-        return true;
     });
-
-    // اگر کارت‌های فیلتر شده خالی بودند، movie-list را مخفی کن یا پیام نمایش بده
-    const movieList = document.getElementById('movie-list');
-    if (filteredCards.length === 0) {
-        movieList.innerHTML = '<p class="text-center text-white">موردی یافت نشد</p>';
-    } else {
-        showPage(currentPage, filteredCards);
-    }
 };
-
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -101,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showPage(page, filteredMovies = null) {
     const movieList = filteredMovies || Array.from(document.querySelectorAll('#movie-list .card'));
+    const displayedCards = Math.min(movieList.length, cardsPerPage); // تعداد کارت‌های نمایش داده‌شده
     const totalPages = Math.ceil(movieList.length / cardsPerPage);
 
     document.getElementById('movie-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -108,16 +100,16 @@ function showPage(page, filteredMovies = null) {
     movieList.forEach(card => card.style.display = 'none');
 
     const start = (page - 1) * cardsPerPage;
-    const end = start + cardsPerPage;
+    const end = start + displayedCards; // استفاده از تعداد کارت‌های فیلتر شده
     for (let i = start; i < end && i < movieList.length; i++) {
         movieList[i].style.display = 'block';
     }
 
     currentPage = page; 
     renderPagination(totalPages);
+
     window.history.pushState({ page: page }, '', `?page=${page}`);
 }
-
 
 
 function renderPagination(totalPages) {
@@ -129,25 +121,60 @@ function renderPagination(totalPages) {
     pageNumbers.push(currentPage);
     if (currentPage < totalPages) pageNumbers.push(currentPage + 1);
     
-    if (currentPage > 2) pageNumbers.unshift(1);
-    if (currentPage < totalPages - 1) pageNumbers.push(totalPages);
+    if (currentPage > 2) {
+        pageNumbers.unshift(1);
+    }
+
+    if (currentPage < totalPages - 1) {
+        pageNumbers.push(totalPages);
+    }
 
     const uniquePageNumbers = [...new Set(pageNumbers)];
-    uniquePageNumbers.forEach(page => {
-        const pageLink = document.createElement('span');
-        pageLink.innerText = page === '...' ? '...' : page;
-        pageLink.classList.add('page-number');
-        if (page === currentPage) pageLink.classList.add('active-page');
-        pageLink.onclick = () => changePage(page);
-        paginationContainer.appendChild(pageLink);
+    const finalPages = [];
+
+    for (let i = 0; i < uniquePageNumbers.length; i++) {
+        finalPages.push(uniquePageNumbers[i]);
+
+        if (i < uniquePageNumbers.length - 1 && uniquePageNumbers[i + 1] - uniquePageNumbers[i] > 1) {
+            finalPages.push('...');
+        }
+    }
+
+    finalPages.forEach(page => {
+        if (page === '...') {
+            const dots = document.createElement('span');
+            dots.innerText = '...';
+            paginationContainer.appendChild(dots);
+        } else {
+            const pageLink = document.createElement('span');
+            pageLink.innerText = page;
+            pageLink.classList.add('page-number');
+            if (page === currentPage) pageLink.classList.add('active-page');
+
+            pageLink.onclick = () => changePage(page);
+            paginationContainer.appendChild(pageLink);
+        }
     });
 
+    // اضافه کردن رویداد برای دکمه‌های قبلی و بعدی
     const prevPageButton = document.getElementById('prevPage');
     const nextPageButton = document.getElementById('nextPage');
+
     prevPageButton.disabled = currentPage === 1;
     nextPageButton.disabled = currentPage === totalPages;
-}
 
+    prevPageButton.onclick = () => {
+        if (currentPage > 1) {
+            changePage(currentPage - 1);
+        }
+    };
+
+    nextPageButton.onclick = () => {
+        if (currentPage < totalPages) {
+            changePage(currentPage + 1);
+        }
+    };
+}
 
 function changePage(page) {
     const skeletons = document.getElementById('skeletons');
