@@ -9,16 +9,6 @@ let sortOrder = {
 
 
 window.onload = function() {
-    document.body.style.display = 'block';
-
-    const skeletons = document.getElementById('skeletons');
-    skeletons.style.display = 'none';
-
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.style.display = 'block';
-    });
-
     const params = new URLSearchParams(window.location.search);
     const pageParam = params.get('page');
     currentPage = pageParam ? parseInt(pageParam) : 1;
