@@ -1,67 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const latestCheckbox = document.getElementById('latest');
-    const topRatingCheckbox = document.getElementById('topRating');
-    const siteRatingCheckbox = document.getElementById('siteRating');
     const movieList = document.getElementById('movie-list');
+    const allCards = movieList.querySelectorAll('.card');
     const searchInput = document.getElementById('search-input');
     const filterSelect = document.getElementById('filter-select');
     const searchButton = document.getElementById('search-button');
     const paginationNumbers = document.getElementById('paginationNumbers');
     const prevPageButton = document.getElementById('prevPage');
     const nextPageButton = document.getElementById('nextPage');
-    
-    const allCards = movieList.querySelectorAll('.card');
+
     let filteredCards = Array.from(allCards);
     let currentPage = 1;
-    const itemsPerPage = 5;
+    const itemsPerPage = 2;
 
-    // Event Listeners for Sorting Checkboxes
-    latestCheckbox.addEventListener('change', () => sortMovies());
-    topRatingCheckbox.addEventListener('change', () => sortMovies());
-    siteRatingCheckbox.addEventListener('change', () => sortMovies());
+    const currentPath = window.location.pathname;
+    const categoryMap = {
+        '/movies': 'movies',
+        '/series': 'series',
+        '/anime': 'anime',
+        '/irani': 'irani',
+    };
 
-    // Event Listeners for Search and Filter
-    searchButton.addEventListener('click', filterMovies);
-    filterSelect.addEventListener('change', filterMovies);
-    searchInput.addEventListener('input', () => {
-        searchButton.disabled = searchInput.value.trim() === '';
-    });
+    const selectedCategory = categoryMap[currentPath];
 
-    // Sort Movies Function
-    function sortMovies() {
-        const checkedCheckboxes = getCheckedCheckboxes();
-        const movies = Array.from(movieList.querySelectorAll('.card'));
-
-        if (checkedCheckboxes.length > 0) {
-            const key = checkedCheckboxes[0]; // Only take the first checked checkbox
-            movies.sort((a, b) => {
-                const aValue = parseFloat(a.getAttribute(`data-${key}`));
-                const bValue = parseFloat(b.getAttribute(`data-${key}`));
-                return bValue - aValue; // Sort in descending order
-            });
-        }
-
-        // Add sorted movies back to the list
-        movies.forEach(movie => movieList.appendChild(movie));
-
-        disableOtherCheckboxes(checkedCheckboxes);
+    // فیلتر دسته‌بندی بر اساس URL
+    if (selectedCategory) {
+        filteredCards = Array.from(allCards).filter(card => card.dataset.category === selectedCategory);
+    } else {
+        filteredCards = Array.from(allCards); // اگر هیچ فیلتر دسته‌بندی اعمال نشد، همه کارت‌ها را نشان بده
     }
 
-    function getCheckedCheckboxes() {
-        const checked = [];
-        if (latestCheckbox.checked) checked.push('update');
-        if (topRatingCheckbox.checked) checked.push('rating');
-        if (siteRatingCheckbox.checked) checked.push('site-rating');
-        return checked;
-    }
-
-    function disableOtherCheckboxes(checkedCheckboxes) {
-        [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
-            checkbox.disabled = checkedCheckboxes.length > 0 && !checkedCheckboxes.includes(checkbox.id);
-        });
-    }
-
-    // Filter Movies Based on Search and Category
+    // فیلتر کردن بر اساس جستجو و دسته‌بندی
     function filterMovies() {
         const searchText = searchInput.value.toLowerCase();
         const selectedCategory = filterSelect.value;
@@ -73,13 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return (selectedCategory === 'all' || category === selectedCategory) && title.includes(searchText);
         });
 
-        currentPage = 1; // Reset to page 1 after filtering
+        currentPage = 1; // بازگشت به صفحه اول بعد از هر فیلتر
         renderPage();
     }
 
-    // Render the movies based on the current page
+    // نمایش کارت‌ها بر اساس صفحه فعلی
     function renderPage() {
         allCards.forEach(card => card.style.display = 'none');
+
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
@@ -90,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePagination();
     }
 
-    // Update pagination buttons
+    // به‌روزرسانی شماره‌های صفحه‌بندی
     function updatePagination() {
         paginationNumbers.innerHTML = '';
         const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
@@ -111,12 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationNumbers.appendChild(pageButton);
         }
 
-        // Disable previous/next buttons if needed
+        // فعال یا غیرفعال کردن دکمه‌ها
         prevPageButton.disabled = currentPage === 1;
         nextPageButton.disabled = currentPage === totalPages;
     }
 
-    // Prev page button
+    // دکمه "Prev" برای رفتن به صفحه قبلی
     prevPageButton.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -124,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Next page button
+    // دکمه "Next" برای رفتن به صفحه بعدی
     nextPageButton.addEventListener('click', () => {
         const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
         if (currentPage < totalPages) {
@@ -133,6 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial render
+    // اتصال به دکمه جستجو و فیلتر
+    searchButton.addEventListener('click', filterMovies);
+    filterSelect.addEventListener('change', filterMovies);
+    searchInput.addEventListener('input', () => {
+        searchButton.disabled = searchInput.value.trim() === '';
+    });
+
+    // نمایش اولیه
     renderPage();
 });
