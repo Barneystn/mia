@@ -29,6 +29,35 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredCards = Array.from(allCards); // اگر هیچ فیلتر دسته‌بندی اعمال نشد، همه کارت‌ها را نشان بده
     }
 
+    // تابع مرتب‌سازی
+    function sortMovies(order) {
+        if (order === 'latest') {
+            // مرتب‌سازی بر اساس data-update
+            filteredCards.sort((a, b) => {
+                const dateA = a.dataset.update ? new Date(a.dataset.update) : new Date();
+                const dateB = b.dataset.update ? new Date(b.dataset.update) : new Date();
+                return dateB - dateA; // نزولی
+            });
+        } else if (order === 'top-rated') {
+            // مرتب‌سازی بر اساس data-rating
+            filteredCards.sort((a, b) => {
+                const ratingA = parseFloat(a.dataset.rating) || 0;
+                const ratingB = parseFloat(b.dataset.rating) || 0;
+                return ratingB - ratingA; // نزولی
+            });
+        } else if (order === 'site-rated') {
+            // مرتب‌سازی بر اساس data-site-rating
+            filteredCards.sort((a, b) => {
+                const siteRatingA = parseFloat(a.dataset.siteRating) || 0;
+                const siteRatingB = parseFloat(b.dataset.siteRating) || 0;
+                return siteRatingB - siteRatingA; // نزولی
+            });
+        }
+
+        currentPage = 1; // بازگشت به صفحه اول بعد از هر مرتب‌سازی
+        renderPage(); // نمایش کارت‌های مرتب‌شده
+    }
+
     // فیلتر کردن بر اساس جستجو و دسته‌بندی
     function filterMovies() {
         const searchText = searchInput.value.toLowerCase();

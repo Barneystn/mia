@@ -133,14 +133,9 @@
 
     <main class="container mx-auto px-4 py-8">
         <div class="flex justify-start gap-2 mb-6">
-            <input type="checkbox" id="latest" aria-label="Latest" class="btn" />
-            <label for="latest" class="text-white">Latest</label>
-        
-            <input type="checkbox" id="topRating" aria-label="Top Rating" class="btn" />
-            <label for="topRating" class="text-white">Top Rating</label>
-        
-            <input type="checkbox" id="siteRating" aria-label="Site Rating" class="btn" />
-            <label for="siteRating" class="text-white">Site Rating</label>
+            <button onclick="sortMovies('latest')" class="btn-42"><span>Latest</span></button>
+            <button onclick="sortMovies('top-rated')" class="btn-42"><span>Top Rated</span></button>
+            <button onclick="sortMovies('site-rated')" class="btn-42"><span>Site Rated</span></button>
         </div>
 
         <div id="movie-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
