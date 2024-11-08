@@ -136,3 +136,68 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const movieList = document.getElementById('movie-list');
+    const allCards = Array.from(movieList.querySelectorAll('.card'));
+    const cardsPerPage = 2;
+    let currentPage = 1;
+
+    function showPage(page) {
+        const totalPages = Math.ceil(allCards.length / cardsPerPage);
+        
+        // بررسی محدوده صفحات
+        if (page < 1 || page > totalPages) return;
+
+        // به‌روزرسانی صفحه فعلی
+        currentPage = page;
+
+        // مخفی کردن همه کارت‌ها و نمایش کارت‌های صفحه فعلی
+        allCards.forEach((card, index) => {
+            card.style.display = (index >= (currentPage - 1) * cardsPerPage && index < currentPage * cardsPerPage) ? 'block' : 'none';
+        });
+
+        // به‌روزرسانی شماره صفحات
+        updatePaginationNumbers(totalPages);
+    }
+
+    function updatePaginationNumbers(totalPages) {
+        const paginationNumbers = document.getElementById('paginationNumbers');
+        paginationNumbers.innerHTML = '';
+
+        // اضافه کردن شماره صفحات به فرمت 1 2 3 ... n
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.className = 'page-number';
+            pageButton.textContent = i;
+            pageButton.onclick = () => showPage(i);
+
+            if (i === currentPage) {
+                pageButton.classList.add('active');
+            }
+
+            paginationNumbers.appendChild(pageButton);
+
+            // اضافه کردن ... در صورت نیاز
+            if (i === 3 && currentPage > 4) {
+                const ellipsis = document.createElement('span');
+                ellipsis.textContent = '...';
+                paginationNumbers.appendChild(ellipsis);
+                i = currentPage > totalPages - 3 ? totalPages - 2 : currentPage - 1;
+            } else if (i === currentPage + 1 && currentPage < totalPages - 3) {
+                const ellipsis = document.createElement('span');
+                ellipsis.textContent = '...';
+                paginationNumbers.appendChild(ellipsis);
+                i = totalPages - 1;
+            }
+        }
+    }
+
+    // افزودن رویداد کلیک به دکمه‌های Prev و Next
+    document.getElementById('prevPage').onclick = () => showPage(currentPage - 1);
+    document.getElementById('nextPage').onclick = () => showPage(currentPage + 1);
+
+    // نمایش صفحه اول در بارگذاری
+    showPage(currentPage);
+});
