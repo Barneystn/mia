@@ -52,12 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sortCards(attribute, order = 'desc') {
+        // ابتدا مرتب‌سازی را انجام می‌دهیم
         filteredCards = [...filteredCards].sort((a, b) => {
             const aValue = parseFloat(a.getAttribute(attribute)) || 0;
             const bValue = parseFloat(b.getAttribute(attribute)) || 0;
             return order === 'asc' ? aValue - bValue : bValue - aValue;
         });
-        showPage(1);  // نمایش نتایج مرتب‌شده از صفحه اول
+        showPage(1);  // پس از مرتب‌سازی، صفحه‌بندی را از صفحه اول نمایش می‌دهیم
     }
 
     function applySearchAndFilter() {
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const title = card.querySelector("h4").textContent.toLowerCase();
             return (selectedCategory === "all" || category === selectedCategory) && title.includes(query);
         });
-        showPage(1);
+        sortCards(); // بعد از اعمال فیلتر، کارت‌ها را دوباره مرتب می‌کنیم
     }
 
     function handleCheckboxChange(selectedCheckbox, attribute) {
@@ -82,7 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (selectedCheckbox.checked) {
             // اعمال مرتب‌سازی بر اساس چک‌باکس انتخاب‌شده
-            sortCards(attribute, sortSelect.value === 'newest-top' ? 'desc' : 'asc');
+            const sortOrder = sortSelect.value === 'newest-top' ? 'desc' : 'asc';
+            sortCards(attribute, sortOrder);
         }
     }
 
@@ -112,5 +114,5 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("nextPage").onclick = () => showPage(currentPage + 1);
 
     initializeCategory();
-    showPage(currentPage);
+    showPage(currentPage);  // نمایش صفحه اول بعد از بارگذاری
 });
