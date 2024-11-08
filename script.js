@@ -74,28 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleSearchButton();
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPath = window.location.pathname;
-    const movieList = document.getElementById('movie-list');
-    const allCards = Array.from(movieList.querySelectorAll('.card'));
-
-    const categoryMap = {
-        '/movies': 'movies',
-        '/series': 'series',
-        '/anime': 'anime',
-        '/irani': 'irani',
-    };
-
-    const selectedCategory = categoryMap[currentPath];
-    let filteredCards = allCards;
-
-    if (selectedCategory) {
-        filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
-    }
-
-    showPage(1, filteredCards);
-});
-
 function showPage(page, filteredMovies = null) {
     const movieList = filteredMovies || Array.from(document.querySelectorAll('#movie-list .card'));
     const displayedCards = Math.min(movieList.length, cardsPerPage);
