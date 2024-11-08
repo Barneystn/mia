@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let filteredCards = Array.from(allCards);
     let currentPage = 1;
-    const itemsPerPage = 5;
+    const itemsPerPage = 2;
 
     const currentPath = window.location.pathname;
     const categoryMap = {
@@ -52,11 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // مرتب کردن کارت‌ها بر اساس چک‌باکس‌ها
     function sortCards() {
         if (latestCheckbox.checked) {
-            filteredCards.sort((a, b) => new Date(b.dataset.update) - new Date(a.dataset.update)); // بر اساس تاریخ بروزرسانی
+            // مرتب‌سازی بر اساس تاریخ آخرین بروزرسانی (از جدیدترین به قدیمی‌ترین)
+            filteredCards.sort((a, b) => new Date(b.dataset.update) - new Date(a.dataset.update));
         } else if (topRatingCheckbox.checked) {
-            filteredCards.sort((a, b) => b.dataset.rating - a.dataset.rating); // بر اساس رتبه‌بندی
+            // مرتب‌سازی بر اساس رتبه‌بندی (از بیشترین به کمترین)
+            filteredCards.sort((a, b) => parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
         } else if (siteRatingCheckbox.checked) {
-            filteredCards.sort((a, b) => b.dataset.siteRating - a.dataset.siteRating); // بر اساس رتبه‌بندی سایت
+            // مرتب‌سازی بر اساس رتبه‌بندی سایت (از بیشترین به کمترین)
+            filteredCards.sort((a, b) => parseFloat(b.dataset.siteRating) - parseFloat(a.dataset.siteRating));
         }
 
         renderPage();
