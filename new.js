@@ -75,3 +75,63 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const latestCheckbox = document.querySelector('input[aria-label="Latest"]');
+    const topRatingCheckbox = document.querySelector('input[aria-label="Top Rating"]');
+    const siteRatingCheckbox = document.querySelector('input[aria-label="Site Rating"]');
+    const sortSelect = document.querySelector('.select-warning');
+    const movieList = document.getElementById('movie-list');
+
+    // تابع برای غیر فعال کردن بقیه چک‌باکس‌ها
+    function disableOtherCheckboxes(selectedCheckbox) {
+        [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
+            checkbox !== selectedCheckbox ? checkbox.checked = false : null;
+        });
+    }
+
+    // رویدادها برای چک‌باکس‌ها
+    latestCheckbox.addEventListener('change', () => {
+        if (latestCheckbox.checked) {
+            disableOtherCheckboxes(latestCheckbox);
+            sortCards('data-update');
+        }
+    });
+
+    topRatingCheckbox.addEventListener('change', () => {
+        if (topRatingCheckbox.checked) {
+            disableOtherCheckboxes(topRatingCheckbox);
+            sortCards('data-rating');
+        }
+    });
+
+    siteRatingCheckbox.addEventListener('change', () => {
+        if (siteRatingCheckbox.checked) {
+            disableOtherCheckboxes(siteRatingCheckbox);
+            sortCards('data-site-rating');
+        }
+    });
+
+    // تابع برای سورت کارت‌ها بر اساس مقدار داده‌شده
+    function sortCards(dataAttribute) {
+        const sortedCards = Array.from(movieList.children)
+            .sort((a, b) => parseFloat(b.getAttribute(dataAttribute)) - parseFloat(a.getAttribute(dataAttribute)));
+
+        movieList.innerHTML = ''; // پاک کردن محتوای قبلی
+        sortedCards.forEach(card => movieList.appendChild(card)); // اضافه کردن کارت‌های سورت‌شده
+    }
+
+    // رویداد برای انتخاب سورت
+    sortSelect.addEventListener('change', () => {
+        const sortOrder = sortSelect.value;
+
+        if (latestCheckbox.checked) {
+            sortCards(sortOrder === 'newest-top' ? 'data-update' : 'data-update', sortOrder);
+        } else if (topRatingCheckbox.checked) {
+            sortCards(sortOrder === 'newest-top' ? 'data-rating' : 'data-rating', sortOrder);
+        } else if (siteRatingCheckbox.checked) {
+            sortCards(sortOrder === 'newest-top' ? 'data-site-rating' : 'data-site-rating', sortOrder);
+        }
+    });
+});
