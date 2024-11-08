@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchInput = document.getElementById("search-input").value.toLowerCase();
         filteredCards = filteredCards.filter(card => {
             const title = card.querySelector("h4").textContent.toLowerCase();
-            return title.includes(searchInput);
+            return title.includes(searchInput); // فیلتر کارت‌ها بر اساس عنوان
         });
 
         currentPage = 1; // پس از اعمال جستجو، صفحه به اولین صفحه باز می‌گردد
