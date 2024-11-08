@@ -5,13 +5,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const latestCheckbox = document.querySelector('input[aria-label="Latest"]');
     const topRatingCheckbox = document.querySelector('input[aria-label="Top Rating"]');
     const siteRatingCheckbox = document.querySelector('input[aria-label="Site Rating"]');
-    const sortSelect = document.querySelector('.select-warning');
     const movieList = document.getElementById("movie-list");
     const paginationNumbers = document.getElementById("paginationNumbers");
     const allCards = Array.from(movieList.querySelectorAll(".card"));
     const cardsPerPage = 2;
     let currentPage = 1;
     let filteredCards = allCards;
+
+    const categoryMap = {
+        '/movies': 'movies',
+        '/series': 'series',
+        '/anime': 'anime',
+        '/irani': 'irani',
+    };
+
+    function initializeCategory() {
+        const selectedCategory = categoryMap[window.location.pathname];
+        if (selectedCategory) {
+            filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
+        }
+    }
 
     function showPage(page) {
         const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
@@ -37,18 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function sortCards(attribute, order = 'desc') {
-        if (!attribute) return; // اگر هیچ ویژگی‌ای مشخص نشده باشد
-
-        filteredCards = [...filteredCards].sort((a, b) => {
-            const aValue = parseFloat(a.getAttribute(attribute)) || 0;
-            const bValue = parseFloat(b.getAttribute(attribute)) || 0;
-            return order === 'asc' ? aValue - bValue : bValue - aValue;
-        });
-        showPage(1);
-    }
-
-    function applyFilters() {
+    function applySearchAndFilter() {
         const query = searchInput.value.toLowerCase();
         const selectedCategory = filterSelect.value;
 
@@ -58,39 +60,33 @@ document.addEventListener("DOMContentLoaded", function () {
             return (selectedCategory === "all" || category === selectedCategory) && title.includes(query);
         });
 
-        applySort();
-    }
-
-    function applySort() {
-        let attribute = '';
-        if (latestCheckbox.checked) attribute = 'data-update';
-        else if (topRatingCheckbox.checked) attribute = 'data-rating';
-        else if (siteRatingCheckbox.checked) attribute = 'data-site-rating';
-
-        const sortOrder = sortSelect.value === 'newest-top' ? 'desc' : 'asc';
-        sortCards(attribute, sortOrder);
+        showPage(1);
     }
 
     function handleCheckboxChange(selectedCheckbox) {
         [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
-            if (checkbox !== selectedCheckbox) checkbox.checked = false;
+            if (checkbox !== selectedCheckbox) {
+                checkbox.checked = false;
+            }
         });
-        applySort();
+
+        if (!selectedCheckbox.checked) {
+            filteredCards = allCards; // در صورت عدم انتخاب، همه کارت‌ها نمایش داده شوند
+        }
+        showPage(1);
     }
 
     searchInput.addEventListener("input", () => searchButton.disabled = !searchInput.value.trim());
-    searchButton.addEventListener("click", applyFilters);
-    filterSelect.addEventListener("change", applyFilters);
+    searchButton.addEventListener("click", applySearchAndFilter);
+    filterSelect.addEventListener("change", applySearchAndFilter);
 
     latestCheckbox.addEventListener('change', () => handleCheckboxChange(latestCheckbox));
     topRatingCheckbox.addEventListener('change', () => handleCheckboxChange(topRatingCheckbox));
     siteRatingCheckbox.addEventListener('change', () => handleCheckboxChange(siteRatingCheckbox));
 
-    sortSelect.addEventListener("change", applySort);
-
     document.getElementById("prevPage").onclick = () => showPage(currentPage - 1);
     document.getElementById("nextPage").onclick = () => showPage(currentPage + 1);
 
-    // ابتدا تمام کارت‌ها را فیلتر کرده و صفحه اول را نمایش بدهید
-    applyFilters();
+    initializeCategory();
+    showPage(currentPage);
 });
