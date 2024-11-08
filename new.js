@@ -52,13 +52,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function sortCards(attribute, order = 'desc') {
-        const sortedCards = [...movieList.children].sort((a, b) => {
+        filteredCards = [...filteredCards].sort((a, b) => {
             const aValue = parseFloat(a.getAttribute(attribute)) || 0;
             const bValue = parseFloat(b.getAttribute(attribute)) || 0;
             return order === 'asc' ? aValue - bValue : bValue - aValue;
         });
-        movieList.innerHTML = '';
-        sortedCards.forEach(card => movieList.appendChild(card));
+        showPage(1);  // بعد از مرتب‌سازی، از صفحه اول نمایش بده
     }
 
     function applySearchAndFilter() {
