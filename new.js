@@ -141,3 +141,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // نمایش اولیه
     renderPage();
 });
+
+
+// اضافه کردن تابع مرتب‌سازی به window
+window.sortMovies = function(order) {
+    if (order === 'latest') {
+        // مرتب‌سازی بر اساس data-update
+        filteredCards.sort((a, b) => {
+            const dateA = new Date(a.dataset.update || Date.now());
+            const dateB = new Date(b.dataset.update || Date.now());
+            return dateB - dateA; // نزولی
+        });
+    } else if (order === 'top-rated') {
+        // مرتب‌سازی بر اساس data-rating
+        filteredCards.sort((a, b) => {
+            const ratingA = parseFloat(a.dataset.rating) || 0;
+            const ratingB = parseFloat(b.dataset.rating) || 0;
+            return ratingB - ratingA; // نزولی
+        });
+    } else if (order === 'site-rated') {
+        // مرتب‌سازی بر اساس data-site-rating
+        filteredCards.sort((a, b) => {
+            const siteRatingA = parseFloat(a.dataset.siteRating) || 0;
+            const siteRatingB = parseFloat(b.dataset.siteRating) || 0;
+            return siteRatingB - siteRatingA; // نزولی
+        });
+    }
+
+    currentPage = 1; // بازگشت به صفحه اول بعد از مرتب‌سازی
+    renderPage(); // نمایش کارت‌های مرتب‌شده
+};
