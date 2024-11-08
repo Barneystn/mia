@@ -180,11 +180,9 @@ function filterMovies() {
 
     let matchedMovies = [];
 
-    // پنهان کردن کارت‌ها و نشان دادن اسکلت‌ها
     document.getElementById('movie-list').classList.add('hidden');
     document.getElementById('skeletonsx').classList.remove('hidden');
 
-    // تأخیر یک ثانیه‌ای برای نشان دادن اسکلت‌ها
     setTimeout(function() {
         movies.forEach(movie => {
             const title = movie.querySelector('h4').textContent.toLowerCase();
@@ -211,14 +209,18 @@ function filterMovies() {
             }
         });
 
-        // پنهان کردن اسکلت‌ها و نشان دادن کارت‌ها
         document.getElementById('skeletonsx').classList.add('hidden');
         document.getElementById('movie-list').classList.remove('hidden');
 
-        // به صفحه اول برگردید و نتایج فیلتر شده را نمایش دهید
-        showPage(1, matchedMovies);
+        if (matchedMovies.length === 0) {
+            document.getElementById('noResultsMessage').style.display = 'block';
+        } else {
+            document.getElementById('noResultsMessage').style.display = 'none';
+            showPage(1, matchedMovies);
+        }
     }, 1000); // یک ثانیه
 }
+
 
 
 
