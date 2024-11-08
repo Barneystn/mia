@@ -12,6 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     const itemsPerPage = 2;
 
+    const currentPath = window.location.pathname;
+    const categoryMap = {
+        '/movies': 'movies',
+        '/series': 'series',
+        '/anime': 'anime',
+        '/irani': 'irani',
+    };
+
+    const selectedCategory = categoryMap[currentPath];
+
+    // فیلتر دسته‌بندی بر اساس URL
+    if (selectedCategory) {
+        filteredCards = Array.from(allCards).filter(card => card.dataset.category === selectedCategory);
+    } else {
+        filteredCards = Array.from(allCards); // اگر هیچ فیلتر دسته‌بندی اعمال نشد، همه کارت‌ها را نشان بده
+    }
+
     // فیلتر کردن بر اساس جستجو و دسته‌بندی
     function filterMovies() {
         const searchText = searchInput.value.toLowerCase();
