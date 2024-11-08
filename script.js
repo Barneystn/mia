@@ -76,12 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showPage(page, filteredMovies = null) {
     const movieList = filteredMovies || Array.from(document.querySelectorAll('#movie-list .card'));
+    const displayedCards = Math.min(movieList.length, cardsPerPage);
     const totalPages = Math.ceil(movieList.length / cardsPerPage);
 
     movieList.forEach(card => card.style.display = 'none');
 
     const start = (page - 1) * cardsPerPage;
-    const end = start + cardsPerPage;
+    const end = start + displayedCards;
     for (let i = start; i < end && i < movieList.length; i++) {
         movieList[i].style.display = 'block';
     }
@@ -91,6 +92,7 @@ function showPage(page, filteredMovies = null) {
 
     window.history.pushState({ page: page }, '', `?page=${page}`);
 }
+
 
 function renderPagination(totalPages) {
     const paginationContainer = document.getElementById('paginationNumbers');
@@ -184,7 +186,7 @@ function filterMovies() {
     setTimeout(function() {
         movies.forEach(movie => {
             const title = movie.querySelector('h4').textContent.toLowerCase();
-
+            
             let category = '';
             if (movie.href.includes('movies')) {
                 category = 'movies';
@@ -201,6 +203,9 @@ function filterMovies() {
 
             if (matchesFilter && matchesSearch) {
                 matchedMovies.push(movie);
+                movie.style.display = 'block';
+            } else {
+                movie.style.display = 'none';
             }
         });
 
@@ -213,7 +218,7 @@ function filterMovies() {
             document.getElementById('noResultsMessage').style.display = 'none';
             showPage(1, matchedMovies);
         }
-    }, 1000);
+    }, 1000); // یک ثانیه
 }
 
 
