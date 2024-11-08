@@ -45,3 +45,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+    const filterSelect = document.getElementById("filter-select");
+
+    // فعال کردن دکمه جستجو با وارد کردن متن
+    searchInput.addEventListener("input", function () {
+        searchButton.disabled = searchInput.value.trim() === "";
+    });
+
+    // تابع برای جستجو و فیلتر کردن محتوا
+    searchButton.addEventListener("click", function () {
+        const query = searchInput.value.toLowerCase();
+        const selectedCategory = filterSelect.value;
+
+        // فیلتر کردن کارت‌ها بر اساس جستجو و دسته‌بندی انتخابی
+        document.querySelectorAll("#movie-list a").forEach(card => {
+            const category = card.getAttribute("data-category");
+            const title = card.querySelector("h4").textContent.toLowerCase();
+
+            // شرط نمایش کارت‌ها
+            const matchCategory = selectedCategory === "all" || category === selectedCategory;
+            const matchTitle = title.includes(query);
+
+            // نمایش یا مخفی کردن کارت بر اساس شرط
+            card.style.display = matchCategory && matchTitle ? "block" : "none";
+        });
+    });
+});
