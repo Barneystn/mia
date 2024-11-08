@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     const itemsPerPage = 2;
 
-    // تابع برای فیلتر کردن کارت‌ها
+    // فیلتر کردن بر اساس جستجو و دسته‌بندی
     function filterMovies() {
         const searchText = searchInput.value.toLowerCase();
         const selectedCategory = filterSelect.value;
@@ -24,13 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return (selectedCategory === 'all' || category === selectedCategory) && title.includes(searchText);
         });
 
-        currentPage = 1; // بازگشت به صفحه اول
+        currentPage = 1; // بازگشت به صفحه اول بعد از هر فیلتر
         renderPage();
     }
 
-    // تابع نمایش کارت‌ها بر اساس صفحه فعلی
+    // نمایش کارت‌ها بر اساس صفحه فعلی
     function renderPage() {
-        allCards.forEach(card => (card.style.display = 'none'));
+        allCards.forEach(card => card.style.display = 'none');
 
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
@@ -63,29 +63,35 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationNumbers.appendChild(pageButton);
         }
 
+        // فعال یا غیرفعال کردن دکمه‌ها
         prevPageButton.disabled = currentPage === 1;
         nextPageButton.disabled = currentPage === totalPages;
     }
 
-    // کنترل حرکت بین صفحات
-    window.showPage = function(page) {
+    // دکمه "Prev" برای رفتن به صفحه قبلی
+    prevPageButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage();
+        }
+    });
+
+    // دکمه "Next" برای رفتن به صفحه بعدی
+    nextPageButton.addEventListener('click', () => {
         const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage();
+        }
+    });
 
-        if (page < 1 || page > totalPages) return;
-
-        currentPage = page;
-        renderPage();
-    };
-
-    // فعال کردن دکمه جستجو در صورت وارد کردن متن
+    // اتصال به دکمه جستجو و فیلتر
+    searchButton.addEventListener('click', filterMovies);
+    filterSelect.addEventListener('change', filterMovies);
     searchInput.addEventListener('input', () => {
         searchButton.disabled = searchInput.value.trim() === '';
     });
 
-    // اتصال به دکمه جستجو
-    searchButton.addEventListener('click', filterMovies);
-    filterSelect.addEventListener('change', filterMovies);
-
-    // نمایش پیش‌فرض
+    // نمایش اولیه
     renderPage();
 });
