@@ -13,20 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = 1;
     let filteredCards = allCards;
 
-    const categoryMap = {
-        '/movies': 'movies',
-        '/series': 'series',
-        '/anime': 'anime',
-        '/irani': 'irani',
-    };
-
-    function initializeCategory() {
-        const selectedCategory = categoryMap[window.location.pathname];
-        if (selectedCategory) {
-            filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
-        }
-    }
-
     function showPage(page) {
         const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
         if (page < 1 || page > totalPages) return;
@@ -51,7 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function sortCards(attribute = 'data-update', order = 'desc') {
+    function sortCards(attribute, order = 'desc') {
+        if (!attribute) return; // اگر هیچ ویژگی‌ای مشخص نشده باشد
+
         filteredCards = [...filteredCards].sort((a, b) => {
             const aValue = parseFloat(a.getAttribute(attribute)) || 0;
             const bValue = parseFloat(b.getAttribute(attribute)) || 0;
@@ -60,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showPage(1);
     }
 
-    function applySearchAndFilter() {
+    function applyFilters() {
         const query = searchInput.value.toLowerCase();
         const selectedCategory = filterSelect.value;
 
@@ -70,55 +58,39 @@ document.addEventListener("DOMContentLoaded", function () {
             return (selectedCategory === "all" || category === selectedCategory) && title.includes(query);
         });
 
-        let sortAttribute = 'data-update'; // مقدار پیش‌فرض
-        if (latestCheckbox.checked) sortAttribute = 'data-update';
-        else if (topRatingCheckbox.checked) sortAttribute = 'data-rating';
-        else if (siteRatingCheckbox.checked) sortAttribute = 'data-site-rating';
-
-        const sortOrder = sortSelect.value === 'newest-top' ? 'desc' : 'asc';
-        sortCards(sortAttribute, sortOrder);
+        applySort();
     }
 
-    function handleCheckboxChange(selectedCheckbox, attribute) {
-        [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
-            if (checkbox !== selectedCheckbox) {
-                checkbox.checked = false;
-            }
-        });
-
-        if (selectedCheckbox.checked) {
-            const sortOrder = sortSelect.value === 'newest-top' ? 'desc' : 'asc';
-            sortCards(attribute, sortOrder);
-        } else {
-            sortCards(); // اگر هیچ چک‌باکسی انتخاب نشده، مقدار پیش‌فرض استفاده شود
-        }
-    }
-
-    searchInput.addEventListener("input", () => searchButton.disabled = !searchInput.value.trim());
-    searchButton.addEventListener("click", applySearchAndFilter);
-    filterSelect.addEventListener("change", applySearchAndFilter);
-
-    latestCheckbox.addEventListener('change', () => handleCheckboxChange(latestCheckbox, 'data-update'));
-    topRatingCheckbox.addEventListener('change', () => handleCheckboxChange(topRatingCheckbox, 'data-rating'));
-    siteRatingCheckbox.addEventListener('change', () => handleCheckboxChange(siteRatingCheckbox, 'data-site-rating'));
-
-    sortSelect.addEventListener("change", () => {
-        let attribute = 'data-update'; // مقدار پیش‌فرض
-        if (latestCheckbox.checked) {
-            attribute = 'data-update';
-        } else if (topRatingCheckbox.checked) {
-            attribute = 'data-rating';
-        } else if (siteRatingCheckbox.checked) {
-            attribute = 'data-site-rating';
-        }
+    function applySort() {
+        let attribute = '';
+        if (latestCheckbox.checked) attribute = 'data-update';
+        else if (topRatingCheckbox.checked) attribute = 'data-rating';
+        else if (siteRatingCheckbox.checked) attribute = 'data-site-rating';
 
         const sortOrder = sortSelect.value === 'newest-top' ? 'desc' : 'asc';
         sortCards(attribute, sortOrder);
-    });
+    }
+
+    function handleCheckboxChange(selectedCheckbox) {
+        [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
+            if (checkbox !== selectedCheckbox) checkbox.checked = false;
+        });
+        applySort();
+    }
+
+    searchInput.addEventListener("input", () => searchButton.disabled = !searchInput.value.trim());
+    searchButton.addEventListener("click", applyFilters);
+    filterSelect.addEventListener("change", applyFilters);
+
+    latestCheckbox.addEventListener('change', () => handleCheckboxChange(latestCheckbox));
+    topRatingCheckbox.addEventListener('change', () => handleCheckboxChange(topRatingCheckbox));
+    siteRatingCheckbox.addEventListener('change', () => handleCheckboxChange(siteRatingCheckbox));
+
+    sortSelect.addEventListener("change", applySort);
 
     document.getElementById("prevPage").onclick = () => showPage(currentPage - 1);
     document.getElementById("nextPage").onclick = () => showPage(currentPage + 1);
 
-    initializeCategory();
-    showPage(currentPage);
+    // ابتدا تمام کارت‌ها را فیلتر کرده و صفحه اول را نمایش بدهید
+    applyFilters();
 });
