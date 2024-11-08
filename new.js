@@ -143,7 +143,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const allCards = Array.from(movieList.querySelectorAll('.card'));
     const cardsPerPage = 2;
     let currentPage = 1;
-    let filteredCards = allCards;
+    let filteredCards = [];
+
+    // تابع فیلتر بر اساس URL
+    function filterByCategory() {
+        const currentPath = window.location.pathname;
+        const categoryMap = {
+            '/movies': 'movies',
+            '/series': 'series',
+            '/anime': 'anime',
+            '/irani': 'irani',
+        };
+
+        const selectedCategory = categoryMap[currentPath];
+
+        // فیلتر کارت‌ها بر اساس دسته‌بندی تعیین شده از مسیر
+        if (selectedCategory) {
+            filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
+        } else {
+            filteredCards = allCards; // نمایش همه کارت‌ها اگر دسته‌بندی خاصی انتخاب نشده باشد
+        }
+        showPage(currentPage); // نمایش اولین صفحه از کارت‌های فیلتر شده
+    }
 
     // تابع نمایش صفحه مشخص
     function showPage(page) {
@@ -153,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentPage = page;
 
-        // مخفی کردن همه کارت‌ها و فقط نمایش کارت‌های صفحه فعلی از کارت‌های فیلترشده
+        // مخفی کردن همه کارت‌ها و نمایش کارت‌های صفحه فعلی
         allCards.forEach(card => (card.style.display = 'none'));
         const start = (currentPage - 1) * cardsPerPage;
         const end = start + cardsPerPage;
@@ -164,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePaginationNumbers(totalPages);
     }
 
+    // تابع به‌روزرسانی دکمه‌های صفحه‌بندی
     function updatePaginationNumbers(totalPages) {
         const paginationNumbers = document.getElementById('paginationNumbers');
         paginationNumbers.innerHTML = '';
@@ -194,39 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function applyFilters() {
-        const query = searchInput.value.toLowerCase();
-        const selectedCategory = filterSelect.value;
-
-        // فیلتر کردن کارت‌ها بر اساس جستجو و دسته‌بندی انتخابی
-        filteredCards = allCards.filter(card => {
-            const category = card.getAttribute("data-category");
-            const title = card.querySelector("h4").textContent.toLowerCase();
-            const matchCategory = selectedCategory === "all" || category === selectedCategory;
-            const matchTitle = title.includes(query);
-            return matchCategory && matchTitle;
-        });
-
-        currentPage = 1;
-        showPage(currentPage); // نمایش اولین صفحه از کارت‌های فیلترشده
-    }
-
-    // رویداد برای دکمه جستجو و فیلتر
-    const searchInput = document.getElementById("search-input");
-    const searchButton = document.getElementById("search-button");
-    const filterSelect = document.getElementById("filter-select");
-
-    // تنظیمات جستجو
-    searchButton.addEventListener("click", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
-
-    // تنظیمات دسته‌بندی
-    filterSelect.addEventListener("change", applyFilters);
-
     // رویداد برای دکمه‌های Prev و Next
     document.getElementById('prevPage').onclick = () => showPage(currentPage - 1);
     document.getElementById('nextPage').onclick = () => showPage(currentPage + 1);
 
-    // نمایش صفحه اول در بارگذاری
-    showPage(currentPage);
+    // اعمال فیلتر دسته‌بندی و نمایش صفحه اول
+    filterByCategory();
 });
