@@ -223,9 +223,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prevPage').onclick = () => showPage(currentPage - 1);
     document.getElementById('nextPage').onclick = () => showPage(currentPage + 1);
 
-    // رویداد برای جستجو
-    const searchInput = document.getElementById("search-input");
-    searchInput.addEventListener("input", applySearchFilter);
+    // رویداد برای دکمه جستجو
+    const searchButton = document.getElementById("search-button");
+    searchButton.addEventListener("click", applySearchFilter);
 
     // اعمال فیلتر دسته‌بندی و نمایش صفحه اول
     filterByCategory(); // ابتدا فیلتر دسته‌بندی اعمال می‌شود
