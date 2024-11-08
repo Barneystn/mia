@@ -144,40 +144,48 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
     const filterSelect = document.getElementById("filter-select");
-    const latestCheckbox = document.querySelector('input[aria-label="Latest"]');
-    const topRatingCheckbox = document.querySelector('input[aria-label="Top Rating"]');
-    const siteRatingCheckbox = document.querySelector('input[aria-label="Site Rating"]');
-    const sortSelect = document.querySelector('.select-warning');
+    const sortSelect = document.getElementById("sort-select"); // افزودن گزینه مرتب‌سازی
     const cardsPerPage = 2; // تعداد کارت‌ها در هر صفحه
     let currentPage = 1;
     let filteredCards = allCards; // کارت‌های فیلتر شده بر اساس دسته‌بندی و جستجو
 
-    // تابع مرتب‌سازی و صفحه‌بندی کارت‌ها
-    function sortAndPaginateCards() {
-        const sortOrder = sortSelect.value === 'newest-top' ? 'desc' : 'asc';
-        let sortAttribute = 'data-update';
+    // تشخیص دسته‌بندی بر اساس URL
+    const currentPath = window.location.pathname;
+    const categoryMap = {
+        '/movies': 'movies',
+        '/series': 'series',
+        '/anime': 'anime',
+        '/irani': 'irani',
+    };
+    const selectedCategory = categoryMap[currentPath];
 
-        // انتخاب فیلد مرتب‌سازی بر اساس چک‌باکس انتخاب شده
-        if (topRatingCheckbox.checked) {
-            sortAttribute = 'data-rating';
-        } else if (siteRatingCheckbox.checked) {
-            sortAttribute = 'data-site-rating';
-        }
+    // اعمال دسته‌بندی اولیه بر اساس URL
+    if (selectedCategory) {
+        filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
+    }
 
-        // مرتب‌سازی کارت‌های فیلتر شده
-        filteredCards = filteredCards.sort((a, b) => {
-            const aValue = parseFloat(a.getAttribute(sortAttribute)) || 0;
-            const bValue = parseFloat(b.getAttribute(sortAttribute)) || 0;
-            return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+    // تابع مرتب‌سازی کارت‌ها
+    function sortCards() {
+        const sortOption = sortSelect.value; // دریافت گزینه مرتب‌سازی انتخاب‌شده
+        filteredCards.sort((a, b) => {
+            if (sortOption === "latest") {
+                return new Date(b.dataset.release) - new Date(a.dataset.release); // جدیدترین
+            } else if (sortOption === "oldest") {
+                return new Date(a.dataset.release) - new Date(b.dataset.release); // قدیمی‌ترین
+            } else if (sortOption === "topRating") {
+                return b.dataset.rating - a.dataset.rating; // بالاترین امتیاز
+            } else if (sortOption === "lowestRating") {
+                return a.dataset.rating - b.dataset.rating; // پایین‌ترین امتیاز
+            }
+            return 0;
         });
-
-        showPage(1); // نمایش صفحه اول پس از مرتب‌سازی
     }
 
     // تابع نمایش کارت‌های یک صفحه خاص
     function showPage(page) {
         const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
         if (page < 1 || page > totalPages) return;
+
         currentPage = page;
 
         // مخفی کردن همه کارت‌ها و نمایش کارت‌های صفحه فعلی
@@ -195,17 +203,24 @@ document.addEventListener("DOMContentLoaded", function () {
     function updatePaginationNumbers(totalPages) {
         const paginationNumbers = document.getElementById("paginationNumbers");
         paginationNumbers.innerHTML = "";
+
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement("button");
             pageButton.className = "page-number";
             pageButton.textContent = i;
             pageButton.onclick = () => showPage(i);
+
             if (i === currentPage) {
                 pageButton.classList.add("active");
             }
+
             paginationNumbers.appendChild(pageButton);
         }
     }
+
+    // رویداد برای دکمه‌های Prev و Next
+    document.getElementById("prevPage").onclick = () => showPage(currentPage - 1);
+    document.getElementById("nextPage").onclick = () => showPage(currentPage + 1);
 
     // تابع جستجو و فیلتر کردن کارت‌ها
     function searchAndFilter() {
@@ -215,25 +230,30 @@ document.addEventListener("DOMContentLoaded", function () {
         filteredCards = allCards.filter(card => {
             const category = card.dataset.category;
             const title = card.querySelector("h4").textContent.toLowerCase();
-            return (selectedCategory === "all" || category === selectedCategory) && title.includes(query);
+            const matchCategory = selectedCategory === "all" || category === selectedCategory;
+            const matchTitle = title.includes(query);
+
+            return matchCategory && matchTitle;
         });
+
+        // مرتب‌سازی بر اساس گزینه انتخاب شده
+        sortCards();
 
         // نمایش صفحه اول نتایج جستجو
         currentPage = 1;
-        sortAndPaginateCards(); // مرتب‌سازی و صفحه‌بندی نتایج
+        showPage(currentPage);
     }
 
-    // رویداد کلیک برای دکمه جستجو
+    // فعال کردن جستجو با کلیک بر روی دکمه
     searchButton.addEventListener("click", searchAndFilter);
 
-    // رویداد تغییر چک‌باکس‌های مرتب‌سازی
-    latestCheckbox.addEventListener('change', sortAndPaginateCards);
-    topRatingCheckbox.addEventListener('change', sortAndPaginateCards);
-    siteRatingCheckbox.addEventListener('change', sortAndPaginateCards);
+    // افزودن رویداد برای گزینه مرتب‌سازی
+    sortSelect.addEventListener("change", () => {
+        sortCards();
+        showPage(1); // نمایش صفحه اول پس از مرتب‌سازی
+    });
 
-    // رویداد تغییر منوی انتخاب مرتب‌سازی
-    sortSelect.addEventListener('change', sortAndPaginateCards);
-
-    // نمایش تمام کارت‌ها در صفحه اول هنگام بارگذاری اولیه
+    // نمایش تمام کارت‌های دسته‌بندی شده در صفحه اول هنگام بارگذاری اولیه
     showPage(currentPage);
 });
+
