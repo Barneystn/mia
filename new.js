@@ -1,92 +1,91 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("search-input");
-    const searchButton = document.getElementById("search-button");
-    const filterSelect = document.getElementById("filter-select");
-    const latestCheckbox = document.querySelector('input[aria-label="Latest"]');
-    const topRatingCheckbox = document.querySelector('input[aria-label="Top Rating"]');
-    const siteRatingCheckbox = document.querySelector('input[aria-label="Site Rating"]');
-    const movieList = document.getElementById("movie-list");
-    const paginationNumbers = document.getElementById("paginationNumbers");
-    const allCards = Array.from(movieList.querySelectorAll(".card"));
-    const cardsPerPage = 2;
+document.addEventListener('DOMContentLoaded', () => {
+    const movieList = document.getElementById('movie-list');
+    const allCards = movieList.querySelectorAll('.card');
+    const searchInput = document.getElementById('search-input');
+    const filterSelect = document.getElementById('filter-select');
+    const searchButton = document.getElementById('search-button');
+    const paginationNumbers = document.getElementById('paginationNumbers');
+    const prevPageButton = document.getElementById('prevPage');
+    const nextPageButton = document.getElementById('nextPage');
+
+    let filteredCards = Array.from(allCards);
     let currentPage = 1;
-    let filteredCards = allCards;
+    const itemsPerPage = 2;
 
-    const categoryMap = {
-        '/movies': 'movies',
-        '/series': 'series',
-        '/anime': 'anime',
-        '/irani': 'irani',
-    };
+    // تابع برای فیلتر کردن کارت‌ها
+    function filterMovies() {
+        const searchText = searchInput.value.toLowerCase();
+        const selectedCategory = filterSelect.value;
 
-    function initializeCategory() {
-        const selectedCategory = categoryMap[window.location.pathname];
-        if (selectedCategory) {
-            filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
-        }
+        filteredCards = Array.from(allCards).filter(card => {
+            const title = card.querySelector('h4').innerText.toLowerCase();
+            const category = card.dataset.category;
+
+            return (selectedCategory === 'all' || category === selectedCategory) && title.includes(searchText);
+        });
+
+        currentPage = 1; // بازگشت به صفحه اول
+        renderPage();
     }
 
-    function showPage(page) {
-        const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+    // تابع نمایش کارت‌ها بر اساس صفحه فعلی
+    function renderPage() {
+        allCards.forEach(card => (card.style.display = 'none'));
+
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        filteredCards.slice(start, end).forEach(card => {
+            card.style.display = 'block';
+        });
+
+        updatePagination();
+    }
+
+    // به‌روزرسانی شماره‌های صفحه‌بندی
+    function updatePagination() {
+        paginationNumbers.innerHTML = '';
+        const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.innerText = i;
+            pageButton.className = 'btn btn-xs mx-1';
+            pageButton.onclick = () => {
+                currentPage = i;
+                renderPage();
+            };
+
+            if (i === currentPage) {
+                pageButton.classList.add('btn-primary');
+            }
+
+            paginationNumbers.appendChild(pageButton);
+        }
+
+        prevPageButton.disabled = currentPage === 1;
+        nextPageButton.disabled = currentPage === totalPages;
+    }
+
+    // کنترل حرکت بین صفحات
+    window.showPage = function(page) {
+        const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+
         if (page < 1 || page > totalPages) return;
 
         currentPage = page;
-        allCards.forEach(card => (card.style.display = "none"));
-        filteredCards.slice((page - 1) * cardsPerPage, page * cardsPerPage).forEach(card => {
-            card.style.display = "block";
-        });
-        updatePaginationNumbers(totalPages);
-    }
+        renderPage();
+    };
 
-    function updatePaginationNumbers(totalPages) {
-        paginationNumbers.innerHTML = "";
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement("button");
-            pageButton.className = "page-number";
-            pageButton.textContent = i;
-            pageButton.classList.toggle("active", i === currentPage);
-            pageButton.onclick = () => showPage(i);
-            paginationNumbers.appendChild(pageButton);
-        }
-    }
+    // فعال کردن دکمه جستجو در صورت وارد کردن متن
+    searchInput.addEventListener('input', () => {
+        searchButton.disabled = searchInput.value.trim() === '';
+    });
 
-    function applySearchAndFilter() {
-        const query = searchInput.value.toLowerCase();
-        const selectedCategory = filterSelect.value;
+    // اتصال به دکمه جستجو
+    searchButton.addEventListener('click', filterMovies);
+    filterSelect.addEventListener('change', filterMovies);
 
-        filteredCards = allCards.filter(card => {
-            const category = card.dataset.category;
-            const title = card.querySelector("h4").textContent.toLowerCase();
-            return (selectedCategory === "all" || category === selectedCategory) && title.includes(query);
-        });
-
-        showPage(1);
-    }
-
-    function handleCheckboxChange(selectedCheckbox) {
-        [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
-            if (checkbox !== selectedCheckbox) {
-                checkbox.checked = false;
-            }
-        });
-
-        if (!selectedCheckbox.checked) {
-            filteredCards = allCards; // در صورت عدم انتخاب، همه کارت‌ها نمایش داده شوند
-        }
-        showPage(1);
-    }
-
-    searchInput.addEventListener("input", () => searchButton.disabled = !searchInput.value.trim());
-    searchButton.addEventListener("click", applySearchAndFilter);
-    filterSelect.addEventListener("change", applySearchAndFilter);
-
-    latestCheckbox.addEventListener('change', () => handleCheckboxChange(latestCheckbox));
-    topRatingCheckbox.addEventListener('change', () => handleCheckboxChange(topRatingCheckbox));
-    siteRatingCheckbox.addEventListener('change', () => handleCheckboxChange(siteRatingCheckbox));
-
-    document.getElementById("prevPage").onclick = () => showPage(currentPage - 1);
-    document.getElementById("nextPage").onclick = () => showPage(currentPage + 1);
-
-    initializeCategory();
-    showPage(currentPage);
+    // نمایش پیش‌فرض
+    renderPage();
 });
