@@ -137,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
 document.addEventListener("DOMContentLoaded", function () {
     const movieList = document.getElementById("movie-list");
     const allCards = Array.from(movieList.querySelectorAll(".card"));
