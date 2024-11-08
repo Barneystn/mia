@@ -141,9 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const movieList = document.getElementById('movie-list');
     const allCards = Array.from(movieList.querySelectorAll('.card'));
-    const cardsPerPage = 2;
+    const cardsPerPage = 2; // تعداد کارت‌های هر صفحه
     let currentPage = 1;
-    let filteredCards = [];
+    let filteredCards = []; // کارت‌های فیلتر شده
 
     // تابع فیلتر بر اساس URL (دسته‌بندی)
     function filterByCategory() {
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = card.querySelector("h4").textContent.toLowerCase();
             return title.includes(searchInput);
         });
-        
+
         currentPage = 1; // پس از اعمال جستجو، صفحه به اولین صفحه باز می‌گردد
         showPage(currentPage); // نمایش اولین صفحه
     }
@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPage(page) {
         const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
 
+        // بررسی صحت شماره صفحه
         if (page < 1 || page > totalPages) return;
 
         currentPage = page;
@@ -203,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const paginationNumbers = document.getElementById('paginationNumbers');
         paginationNumbers.innerHTML = '';
 
+        // ایجاد دکمه‌های صفحه‌بندی
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('button');
             pageButton.className = 'page-number';
