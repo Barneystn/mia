@@ -84,54 +84,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const sortSelect = document.querySelector('.select-warning');
     const movieList = document.getElementById('movie-list');
 
-    // تابع برای غیر فعال کردن بقیه چک‌باکس‌ها
     function disableOtherCheckboxes(selectedCheckbox) {
         [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
             checkbox !== selectedCheckbox ? checkbox.checked = false : null;
         });
     }
 
-    // رویدادها برای چک‌باکس‌ها
     latestCheckbox.addEventListener('change', () => {
         if (latestCheckbox.checked) {
             disableOtherCheckboxes(latestCheckbox);
-            sortCards('data-update');
+            sortCards('data-update', 'desc'); // به صورت نزولی مرتب می‌کند
         }
     });
 
     topRatingCheckbox.addEventListener('change', () => {
         if (topRatingCheckbox.checked) {
             disableOtherCheckboxes(topRatingCheckbox);
-            sortCards('data-rating');
+            sortCards('data-rating', 'desc');
         }
     });
 
     siteRatingCheckbox.addEventListener('change', () => {
         if (siteRatingCheckbox.checked) {
             disableOtherCheckboxes(siteRatingCheckbox);
-            sortCards('data-site-rating');
+            sortCards('data-site-rating', 'desc');
         }
     });
 
-    // تابع برای سورت کارت‌ها بر اساس مقدار داده‌شده
-    function sortCards(dataAttribute) {
+    function sortCards(dataAttribute, order = 'desc') {
         const sortedCards = Array.from(movieList.children)
-            .sort((a, b) => parseFloat(b.getAttribute(dataAttribute)) - parseFloat(a.getAttribute(dataAttribute)));
+            .sort((a, b) => {
+                const aValue = parseFloat(a.getAttribute(dataAttribute)) || 0;
+                const bValue = parseFloat(b.getAttribute(dataAttribute)) || 0;
+                return order === 'asc' ? aValue - bValue : bValue - aValue;
+            });
 
-        movieList.innerHTML = ''; // پاک کردن محتوای قبلی
-        sortedCards.forEach(card => movieList.appendChild(card)); // اضافه کردن کارت‌های سورت‌شده
+        movieList.innerHTML = '';
+        sortedCards.forEach(card => movieList.appendChild(card));
     }
 
-    // رویداد برای انتخاب سورت
     sortSelect.addEventListener('change', () => {
         const sortOrder = sortSelect.value;
+        const order = sortOrder === 'newest-top' ? 'desc' : 'asc';
 
         if (latestCheckbox.checked) {
-            sortCards(sortOrder === 'newest-top' ? 'data-update' : 'data-update', sortOrder);
+            sortCards('data-update', order);
         } else if (topRatingCheckbox.checked) {
-            sortCards(sortOrder === 'newest-top' ? 'data-rating' : 'data-rating', sortOrder);
+            sortCards('data-rating', order);
         } else if (siteRatingCheckbox.checked) {
-            sortCards(sortOrder === 'newest-top' ? 'data-site-rating' : 'data-site-rating', sortOrder);
+            sortCards('data-site-rating', order);
         }
     });
 });
