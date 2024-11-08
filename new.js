@@ -73,8 +73,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handleCheckboxChange(selectedCheckbox, attribute) {
-        [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => checkbox !== selectedCheckbox && (checkbox.checked = false));
-        if (selectedCheckbox.checked) sortCards(attribute, sortSelect.value === 'newest-top' ? 'desc' : 'asc');
+        // غیرفعال کردن سایر چک‌باکس‌ها
+        [latestCheckbox, topRatingCheckbox, siteRatingCheckbox].forEach(checkbox => {
+            if (checkbox !== selectedCheckbox) {
+                checkbox.checked = false;
+            }
+        });
+
+        if (selectedCheckbox.checked) {
+            // اعمال مرتب‌سازی بر اساس چک‌باکس انتخاب‌شده
+            sortCards(attribute, sortSelect.value === 'newest-top' ? 'desc' : 'asc');
+        }
     }
 
     searchInput.addEventListener("input", () => searchButton.disabled = !searchInput.value.trim());
@@ -86,8 +95,17 @@ document.addEventListener("DOMContentLoaded", function () {
     siteRatingCheckbox.addEventListener('change', () => handleCheckboxChange(siteRatingCheckbox, 'data-site-rating'));
 
     sortSelect.addEventListener("change", () => {
-        const attribute = latestCheckbox.checked ? 'data-update' : topRatingCheckbox.checked ? 'data-rating' : 'data-site-rating';
-        sortCards(attribute, sortSelect.value === 'newest-top' ? 'desc' : 'asc');
+        let attribute = '';
+        if (latestCheckbox.checked) {
+            attribute = 'data-update';
+        } else if (topRatingCheckbox.checked) {
+            attribute = 'data-rating';
+        } else if (siteRatingCheckbox.checked) {
+            attribute = 'data-site-rating';
+        }
+
+        const sortOrder = sortSelect.value === 'newest-top' ? 'desc' : 'asc';
+        sortCards(attribute, sortOrder);
     });
 
     document.getElementById("prevPage").onclick = () => showPage(currentPage - 1);
