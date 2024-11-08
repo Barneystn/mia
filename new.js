@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const paginationNumbers = document.getElementById('paginationNumbers');
     const prevPageButton = document.getElementById('prevPage');
     const nextPageButton = document.getElementById('nextPage');
+    const sortButtons = document.querySelectorAll('.btn-42');
 
     let filteredCards = Array.from(allCards);
     let currentPage = 1;
@@ -22,14 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const selectedCategory = categoryMap[currentPath];
 
-    // فیلتر دسته‌بندی بر اساس URL
     if (selectedCategory) {
         filteredCards = Array.from(allCards).filter(card => card.dataset.category === selectedCategory);
-    } else {
-        filteredCards = Array.from(allCards); // اگر هیچ فیلتر دسته‌بندی اعمال نشد، همه کارت‌ها را نشان بده
     }
 
-    // فیلتر کردن بر اساس جستجو و دسته‌بندی
     function filterMovies() {
         const searchText = searchInput.value.toLowerCase();
         const selectedCategory = filterSelect.value;
@@ -41,11 +38,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return (selectedCategory === 'all' || category === selectedCategory) && title.includes(searchText);
         });
 
-        currentPage = 1; // بازگشت به صفحه اول بعد از هر فیلتر
+        currentPage = 1;
         renderPage();
     }
 
-    // نمایش کارت‌ها بر اساس صفحه فعلی
+    function sortCards(attribute) {
+        filteredCards.sort((a, b) => {
+            const aValue = parseFloat(a.dataset[attribute]) || 0;
+            const bValue = parseFloat(b.dataset[attribute]) || 0;
+            return bValue - aValue;
+        });
+        currentPage = 1;
+        renderPage();
+    }
+
+    sortButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const sortType = button.innerText.trim().toLowerCase();
+            if (sortType === 'latest') {
+                sortCards('update');
+            } else if (sortType === 'top rated') {
+                sortCards('rating');
+            } else if (sortType === 'site rated') {
+                sortCards('siteRating');
+            }
+        });
+    });
+
     function renderPage() {
         allCards.forEach(card => card.style.display = 'none');
 
@@ -59,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePagination();
     }
 
-    // به‌روزرسانی شماره‌های صفحه‌بندی
     function updatePagination() {
         paginationNumbers.innerHTML = '';
         const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
@@ -80,12 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationNumbers.appendChild(pageButton);
         }
 
-        // فعال یا غیرفعال کردن دکمه‌ها
         prevPageButton.disabled = currentPage === 1;
         nextPageButton.disabled = currentPage === totalPages;
     }
 
-    // دکمه "Prev" برای رفتن به صفحه قبلی
     prevPageButton.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -93,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // دکمه "Next" برای رفتن به صفحه بعدی
     nextPageButton.addEventListener('click', () => {
         const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
         if (currentPage < totalPages) {
@@ -102,13 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // اتصال به دکمه جستجو و فیلتر
     searchButton.addEventListener('click', filterMovies);
     filterSelect.addEventListener('change', filterMovies);
     searchInput.addEventListener('input', () => {
         searchButton.disabled = searchInput.value.trim() === '';
     });
 
-    // نمایش اولیه
     renderPage();
 });
