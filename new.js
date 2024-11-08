@@ -17,36 +17,37 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPath = window.location.pathname;
-    const movieList = document.getElementById('movie-list');
-    const allCards = movieList.querySelectorAll('.card');
 
-    const categoryMap = {
-        '/movies': 'movies',
-        '/series': 'series',
-        '/anime': 'anime',
-        '/irani': 'irani',
-    };
 
-    const selectedCategory = categoryMap[currentPath];
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+    const filterSelect = document.getElementById("filter-select");
 
-    if (selectedCategory) {
-        allCards.forEach(card => {
-            if (card.dataset.category !== selectedCategory) {
-                card.style.display = 'none';
-            } else {
-                card.style.display = 'block';
-            }
+    // فعال کردن دکمه جستجو با وارد کردن متن
+    searchInput.addEventListener("input", function () {
+        searchButton.disabled = searchInput.value.trim() === "";
+    });
+
+    // تابع برای جستجو و فیلتر کردن محتوا
+    searchButton.addEventListener("click", function () {
+        const query = searchInput.value.toLowerCase();
+        const selectedCategory = filterSelect.value;
+
+        // فیلتر کردن کارت‌ها بر اساس جستجو و دسته‌بندی انتخابی
+        document.querySelectorAll("#movie-list a").forEach(card => {
+            const category = card.getAttribute("data-category");
+            const title = card.querySelector("h4").textContent.toLowerCase();
+
+            // شرط نمایش کارت‌ها
+            const matchCategory = selectedCategory === "all" || category === selectedCategory;
+            const matchTitle = title.includes(query);
+
+            // نمایش یا مخفی کردن کارت بر اساس شرط
+            card.style.display = matchCategory && matchTitle ? "block" : "none";
         });
-    } else {
-        allCards.forEach(card => {
-            card.style.display = 'block'; // نمایش همه کارت‌ها در صفحه اصلی یا صفحات دیگر
-        });
-    }
+    });
 });
-
-
 
 
 document.addEventListener('DOMContentLoaded', () => {
