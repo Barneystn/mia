@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevPageButton = document.getElementById('prevPage');
     const nextPageButton = document.getElementById('nextPage');
 
+    const latestCheckbox = document.querySelector('[aria-label="Latest"]');
+    const topRatingCheckbox = document.querySelector('[aria-label="Top Rating"]');
+    const siteRatingCheckbox = document.querySelector('[aria-label="Site Rating"]');
+
     let filteredCards = Array.from(allCards);
     let currentPage = 1;
     const itemsPerPage = 2;
@@ -42,6 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         currentPage = 1; // بازگشت به صفحه اول بعد از هر فیلتر
+        renderPage();
+    }
+
+    // مرتب کردن کارت‌ها بر اساس چک‌باکس‌ها
+    function sortCards() {
+        if (latestCheckbox.checked) {
+            filteredCards.sort((a, b) => new Date(b.dataset.update) - new Date(a.dataset.update)); // بر اساس تاریخ بروزرسانی
+        } else if (topRatingCheckbox.checked) {
+            filteredCards.sort((a, b) => b.dataset.rating - a.dataset.rating); // بر اساس رتبه‌بندی
+        } else if (siteRatingCheckbox.checked) {
+            filteredCards.sort((a, b) => b.dataset.siteRating - a.dataset.siteRating); // بر اساس رتبه‌بندی سایت
+        }
+
         renderPage();
     }
 
@@ -107,6 +124,40 @@ document.addEventListener('DOMContentLoaded', () => {
     filterSelect.addEventListener('change', filterMovies);
     searchInput.addEventListener('input', () => {
         searchButton.disabled = searchInput.value.trim() === '';
+    });
+
+    // غیرفعال کردن چک‌باکس‌های دیگر
+    latestCheckbox.addEventListener('change', () => {
+        if (latestCheckbox.checked) {
+            topRatingCheckbox.disabled = true;
+            siteRatingCheckbox.disabled = true;
+        } else {
+            topRatingCheckbox.disabled = false;
+            siteRatingCheckbox.disabled = false;
+        }
+        sortCards();
+    });
+
+    topRatingCheckbox.addEventListener('change', () => {
+        if (topRatingCheckbox.checked) {
+            latestCheckbox.disabled = true;
+            siteRatingCheckbox.disabled = true;
+        } else {
+            latestCheckbox.disabled = false;
+            siteRatingCheckbox.disabled = false;
+        }
+        sortCards();
+    });
+
+    siteRatingCheckbox.addEventListener('change', () => {
+        if (siteRatingCheckbox.checked) {
+            latestCheckbox.disabled = true;
+            topRatingCheckbox.disabled = true;
+        } else {
+            latestCheckbox.disabled = false;
+            topRatingCheckbox.disabled = false;
+        }
+        sortCards();
     });
 
     // نمایش اولیه
