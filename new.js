@@ -143,22 +143,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const allCards = Array.from(movieList.querySelectorAll('.card'));
     const cardsPerPage = 2;
     let currentPage = 1;
+    let filteredCards = allCards; // ذخیره کارت‌های فیلترشده
 
     function showPage(page) {
-        const totalPages = Math.ceil(allCards.length / cardsPerPage);
-        
+        const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+
         // بررسی محدوده صفحات
         if (page < 1 || page > totalPages) return;
 
-        // به‌روزرسانی صفحه فعلی
         currentPage = page;
 
-        // مخفی کردن همه کارت‌ها و نمایش کارت‌های صفحه فعلی
-        allCards.forEach((card, index) => {
-            card.style.display = (index >= (currentPage - 1) * cardsPerPage && index < currentPage * cardsPerPage) ? 'block' : 'none';
+        // مخفی کردن همه کارت‌ها و فقط نمایش کارت‌های صفحه فعلی از کارت‌های فیلترشده
+        allCards.forEach(card => (card.style.display = 'none'));
+        filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).forEach(card => {
+            card.style.display = 'block';
         });
 
-        // به‌روزرسانی شماره صفحات
         updatePaginationNumbers(totalPages);
     }
 
@@ -166,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const paginationNumbers = document.getElementById('paginationNumbers');
         paginationNumbers.innerHTML = '';
 
-        // اضافه کردن شماره صفحات به فرمت 1 2 3 ... n
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('button');
             pageButton.className = 'page-number';
@@ -179,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             paginationNumbers.appendChild(pageButton);
 
-            // اضافه کردن ... در صورت نیاز
             if (i === 3 && currentPage > 4) {
                 const ellipsis = document.createElement('span');
                 ellipsis.textContent = '...';
@@ -194,10 +192,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // افزودن رویداد کلیک به دکمه‌های Prev و Next
+    function applyFilter() {
+        const query = searchInput.value.toLowerCase();
+        const selectedCategory = filterSelect.value;
+
+        filteredCards = allCards.filter(card => {
+            const category = card.getAttribute("data-category");
+            const title = card.querySelector("h4").textContent.toLowerCase();
+            const matchCategory = selectedCategory === "all" || category === selectedCategory;
+            const matchTitle = title.includes(query);
+            return matchCategory && matchTitle;
+        });
+
+        currentPage = 1;
+        showPage(currentPage);
+    }
+
+    // رویداد برای دکمه جستجو و فیلتر
+    searchButton.addEventListener("click", applyFilter);
+    filterSelect.addEventListener("change", applyFilter);
+
     document.getElementById('prevPage').onclick = () => showPage(currentPage - 1);
     document.getElementById('nextPage').onclick = () => showPage(currentPage + 1);
 
-    // نمایش صفحه اول در بارگذاری
     showPage(currentPage);
 });
