@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     let filteredCards = [];
 
-    // تابع فیلتر بر اساس URL
+    // تابع فیلتر بر اساس URL (دسته‌بندی)
     function filterByCategory() {
         const currentPath = window.location.pathname;
         const categoryMap = {
@@ -157,13 +157,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const selectedCategory = categoryMap[currentPath];
 
-        // فیلتر کارت‌ها بر اساس دسته‌بندی تعیین شده از مسیر
+        // فیلتر کارت‌ها بر اساس دسته‌بندی
         if (selectedCategory) {
             filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
         } else {
             filteredCards = allCards; // نمایش همه کارت‌ها اگر دسته‌بندی خاصی انتخاب نشده باشد
         }
-        showPage(currentPage); // نمایش اولین صفحه از کارت‌های فیلتر شده
+
+        applySearchFilter(); // اعمال فیلتر جستجو بعد از فیلتر دسته‌بندی
+    }
+
+    // تابع فیلتر بر اساس جستجو
+    function applySearchFilter() {
+        const searchInput = document.getElementById("search-input").value.toLowerCase();
+        filteredCards = filteredCards.filter(card => {
+            const title = card.querySelector("h4").textContent.toLowerCase();
+            return title.includes(searchInput);
+        });
+        
+        currentPage = 1; // پس از اعمال جستجو، صفحه به اولین صفحه باز می‌گردد
+        showPage(currentPage); // نمایش اولین صفحه
     }
 
     // تابع نمایش صفحه مشخص
@@ -201,18 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             paginationNumbers.appendChild(pageButton);
-
-            if (i === 3 && currentPage > 4) {
-                const ellipsis = document.createElement('span');
-                ellipsis.textContent = '...';
-                paginationNumbers.appendChild(ellipsis);
-                i = currentPage > totalPages - 3 ? totalPages - 2 : currentPage - 1;
-            } else if (i === currentPage + 1 && currentPage < totalPages - 3) {
-                const ellipsis = document.createElement('span');
-                ellipsis.textContent = '...';
-                paginationNumbers.appendChild(ellipsis);
-                i = totalPages - 1;
-            }
         }
     }
 
@@ -220,6 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('prevPage').onclick = () => showPage(currentPage - 1);
     document.getElementById('nextPage').onclick = () => showPage(currentPage + 1);
 
+    // رویداد برای جستجو
+    const searchInput = document.getElementById("search-input");
+    searchInput.addEventListener("input", applySearchFilter);
+
     // اعمال فیلتر دسته‌بندی و نمایش صفحه اول
-    filterByCategory();
+    filterByCategory(); // ابتدا فیلتر دسته‌بندی اعمال می‌شود
 });
