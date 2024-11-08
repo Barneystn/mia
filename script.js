@@ -82,7 +82,7 @@ function showPage(page, filteredMovies = null) {
     movieList.forEach(card => card.style.display = 'none');
 
     const start = (page - 1) * cardsPerPage;
-    const end = start + displayedCards;
+    const end = start + cardsPerPage; // مقدار ثابت برای نمایش تعداد کارت‌ها در هر صفحه
     for (let i = start; i < end && i < movieList.length; i++) {
         movieList[i].style.display = 'block';
     }
