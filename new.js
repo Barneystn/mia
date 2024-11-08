@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let filteredCards = Array.from(allCards);
     let currentPage = 1;
-    const itemsPerPage = 2;
+    const itemsPerPage = 5;
 
     const currentPath = window.location.pathname;
     const categoryMap = {
