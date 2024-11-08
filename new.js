@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const bValue = parseFloat(b.getAttribute(attribute)) || 0;
             return order === 'asc' ? aValue - bValue : bValue - aValue;
         });
-        showPage(1);  // بعد از مرتب‌سازی، از صفحه اول نمایش بده
+        showPage(1);  // نمایش نتایج مرتب‌شده از صفحه اول
     }
 
     function applySearchAndFilter() {
