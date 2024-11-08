@@ -114,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
     const filterSelect = document.getElementById("filter-select");
-    const sortSelect = document.getElementById("sort-select"); // افزودن گزینه مرتب‌سازی
     const cardsPerPage = 2; // تعداد کارت‌ها در هر صفحه
     let currentPage = 1;
     let filteredCards = allCards; // کارت‌های فیلتر شده بر اساس دسته‌بندی و جستجو
@@ -132,23 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // اعمال دسته‌بندی اولیه بر اساس URL
     if (selectedCategory) {
         filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
-    }
-
-    // تابع مرتب‌سازی کارت‌ها
-    function sortCards() {
-        const sortOption = sortSelect.value; // دریافت گزینه مرتب‌سازی انتخاب‌شده
-        filteredCards.sort((a, b) => {
-            if (sortOption === "latest") {
-                return new Date(b.dataset.release) - new Date(a.dataset.release); // جدیدترین
-            } else if (sortOption === "oldest") {
-                return new Date(a.dataset.release) - new Date(b.dataset.release); // قدیمی‌ترین
-            } else if (sortOption === "topRating") {
-                return b.dataset.rating - a.dataset.rating; // بالاترین امتیاز
-            } else if (sortOption === "lowestRating") {
-                return a.dataset.rating - b.dataset.rating; // پایین‌ترین امتیاز
-            }
-            return 0;
-        });
     }
 
     // تابع نمایش کارت‌های یک صفحه خاص
@@ -206,9 +188,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return matchCategory && matchTitle;
         });
 
-        // مرتب‌سازی بر اساس گزینه انتخاب شده
-        sortCards();
-
         // نمایش صفحه اول نتایج جستجو
         currentPage = 1;
         showPage(currentPage);
@@ -217,14 +196,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // فعال کردن جستجو با کلیک بر روی دکمه
     searchButton.addEventListener("click", searchAndFilter);
 
-    // افزودن رویداد برای گزینه مرتب‌سازی
-    sortSelect.addEventListener("change", () => {
-        sortCards();
-        currentPage = 1; // تنظیم به صفحه اول پس از مرتب‌سازی
-        showPage(currentPage);
-    });
-
     // نمایش تمام کارت‌های دسته‌بندی شده در صفحه اول هنگام بارگذاری اولیه
     showPage(currentPage);
 });
-
