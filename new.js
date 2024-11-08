@@ -145,10 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     let filteredCards = allCards;
 
+    // تابع نمایش صفحه مشخص
     function showPage(page) {
         const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
-        
-        // بررسی محدوده صفحات
+
         if (page < 1 || page > totalPages) return;
 
         currentPage = page;
@@ -195,16 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyFilter() {
-        const query = searchInput.value.toLowerCase();
         const selectedCategory = filterSelect.value;
 
-        // فیلتر کردن کارت‌ها بر اساس جستجو و دسته‌بندی انتخابی
+        // فیلتر کردن کارت‌ها بر اساس دسته‌بندی انتخابی
         filteredCards = allCards.filter(card => {
             const category = card.getAttribute("data-category");
-            const title = card.querySelector("h4").textContent.toLowerCase();
-            const matchCategory = selectedCategory === "all" || category === selectedCategory;
-            const matchTitle = title.includes(query);
-            return matchCategory && matchTitle;
+            return selectedCategory === "all" || category === selectedCategory;
         });
 
         currentPage = 1;
@@ -216,7 +212,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById("search-button");
     const filterSelect = document.getElementById("filter-select");
 
-    searchButton.addEventListener("click", applyFilter);
+    // تنظیمات جستجو
+    searchButton.addEventListener("click", () => {
+        const query = searchInput.value.toLowerCase();
+        filteredCards = allCards.filter(card => {
+            const category = card.getAttribute("data-category");
+            const title = card.querySelector("h4").textContent.toLowerCase();
+            return (filterSelect.value === "all" || category === filterSelect.value) && title.includes(query);
+        });
+        currentPage = 1;
+        showPage(currentPage);
+    });
+
+    // تنظیمات دسته‌بندی
     filterSelect.addEventListener("change", applyFilter);
 
     // رویداد برای دکمه‌های Prev و Next
