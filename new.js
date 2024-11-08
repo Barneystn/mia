@@ -143,11 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const allCards = Array.from(movieList.querySelectorAll('.card'));
     const cardsPerPage = 2;
     let currentPage = 1;
-    let filteredCards = allCards; // ذخیره کارت‌های فیلترشده
+    let filteredCards = allCards;
 
     function showPage(page) {
         const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
-
+        
         // بررسی محدوده صفحات
         if (page < 1 || page > totalPages) return;
 
@@ -155,7 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // مخفی کردن همه کارت‌ها و فقط نمایش کارت‌های صفحه فعلی از کارت‌های فیلترشده
         allCards.forEach(card => (card.style.display = 'none'));
-        filteredCards.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).forEach(card => {
+        const start = (currentPage - 1) * cardsPerPage;
+        const end = start + cardsPerPage;
+        filteredCards.slice(start, end).forEach(card => {
             card.style.display = 'block';
         });
 
@@ -196,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.toLowerCase();
         const selectedCategory = filterSelect.value;
 
+        // فیلتر کردن کارت‌ها بر اساس جستجو و دسته‌بندی انتخابی
         filteredCards = allCards.filter(card => {
             const category = card.getAttribute("data-category");
             const title = card.querySelector("h4").textContent.toLowerCase();
@@ -205,15 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         currentPage = 1;
-        showPage(currentPage);
+        showPage(currentPage); // نمایش اولین صفحه از کارت‌های فیلترشده
     }
 
     // رویداد برای دکمه جستجو و فیلتر
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+    const filterSelect = document.getElementById("filter-select");
+
     searchButton.addEventListener("click", applyFilter);
     filterSelect.addEventListener("change", applyFilter);
 
+    // رویداد برای دکمه‌های Prev و Next
     document.getElementById('prevPage').onclick = () => showPage(currentPage - 1);
     document.getElementById('nextPage').onclick = () => showPage(currentPage + 1);
 
+    // نمایش صفحه اول در بارگذاری
     showPage(currentPage);
 });
