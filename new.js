@@ -17,7 +17,34 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+    const movieList = document.getElementById('movie-list');
+    const allCards = movieList.querySelectorAll('.card');
 
+    const categoryMap = {
+        '/movies': 'movies',
+        '/series': 'series',
+        '/anime': 'anime',
+        '/irani': 'irani',
+    };
+
+    const selectedCategory = categoryMap[currentPath];
+
+    if (selectedCategory) {
+        allCards.forEach(card => {
+            if (card.dataset.category !== selectedCategory) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = 'block';
+            }
+        });
+    } else {
+        allCards.forEach(card => {
+            card.style.display = 'block'; // نمایش همه کارت‌ها در صفحه اصلی یا صفحات دیگر
+        });
+    }
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
@@ -112,19 +139,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    const movieList = document.getElementById("movie-list");
+    const allCards = Array.from(movieList.querySelectorAll(".card"));
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
     const filterSelect = document.getElementById("filter-select");
-    const movieList = document.getElementById("movie-list");
-    const allCards = Array.from(movieList.querySelectorAll(".card"));
     const cardsPerPage = 2; // تعداد کارت‌ها در هر صفحه
     let currentPage = 1;
-    let filteredCards = allCards; // نتایج فیلتر شده
+    let filteredCards = allCards; // کارت‌های فیلتر شده بر اساس دسته‌بندی و جستجو
 
-    // فعال کردن دکمه جستجو فقط در صورت وارد کردن متن
-    searchInput.addEventListener("input", function () {
-        searchButton.disabled = searchInput.value.trim() === "";
-    });
+    // تشخیص دسته‌بندی بر اساس URL
+    const currentPath = window.location.pathname;
+    const categoryMap = {
+        '/movies': 'movies',
+        '/series': 'series',
+        '/anime': 'anime',
+        '/irani': 'irani',
+    };
+    const selectedCategory = categoryMap[currentPath];
+
+    // اعمال دسته‌بندی اولیه بر اساس URL
+    if (selectedCategory) {
+        filteredCards = allCards.filter(card => card.dataset.category === selectedCategory);
+    }
 
     // تابع نمایش کارت‌های یک صفحه خاص
     function showPage(page) {
@@ -163,28 +200,32 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // تابع جستجو و فیلتر کردن
-    searchButton.addEventListener("click", function () {
-        const query = searchInput.value.toLowerCase();
-        const selectedCategory = filterSelect.value;
-
-        // فیلتر کارت‌ها بر اساس جستجو و دسته‌بندی انتخابی
-        filteredCards = allCards.filter(card => {
-            const category = card.getAttribute("data-category");
-            const title = card.querySelector("h4").textContent.toLowerCase();
-            const matchCategory = selectedCategory === "all" || category === selectedCategory;
-            const matchTitle = title.includes(query);
-            return matchCategory && matchTitle;
-        });
-
-        currentPage = 1;
-        showPage(currentPage);
-    });
-
     // رویداد برای دکمه‌های Prev و Next
     document.getElementById("prevPage").onclick = () => showPage(currentPage - 1);
     document.getElementById("nextPage").onclick = () => showPage(currentPage + 1);
 
-    // نمایش تمام کارت‌ها در صفحه اول هنگام بارگذاری اولیه
+    // تابع جستجو و فیلتر کردن کارت‌ها
+    function searchAndFilter() {
+        const query = searchInput.value.toLowerCase();
+        const selectedCategory = filterSelect.value;
+
+        filteredCards = allCards.filter(card => {
+            const category = card.dataset.category;
+            const title = card.querySelector("h4").textContent.toLowerCase();
+            const matchCategory = selectedCategory === "all" || category === selectedCategory;
+            const matchTitle = title.includes(query);
+
+            return matchCategory && matchTitle;
+        });
+
+        // نمایش صفحه اول نتایج جستجو
+        currentPage = 1;
+        showPage(currentPage);
+    }
+
+    // فعال کردن جستجو با کلیک بر روی دکمه
+    searchButton.addEventListener("click", searchAndFilter);
+
+    // نمایش تمام کارت‌های دسته‌بندی شده در صفحه اول هنگام بارگذاری اولیه
     showPage(currentPage);
 });
