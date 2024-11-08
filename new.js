@@ -250,7 +250,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // افزودن رویداد برای گزینه مرتب‌سازی
     sortSelect.addEventListener("change", () => {
         sortCards();
-        showPage(1); // نمایش صفحه اول پس از مرتب‌سازی
+        currentPage = 1; // تنظیم به صفحه اول پس از مرتب‌سازی
+        showPage(currentPage);
     });
 
     // نمایش تمام کارت‌های دسته‌بندی شده در صفحه اول هنگام بارگذاری اولیه
