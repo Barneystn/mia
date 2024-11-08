@@ -144,9 +144,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const searchButton = document.getElementById("search-button");
     const filterSelect = document.getElementById("filter-select");
+    const sortSelect = document.querySelector(".sort-select"); // انتخاب لیست مرتب‌سازی
     const cardsPerPage = 2; // تعداد کارت‌ها در هر صفحه
     let currentPage = 1;
     let filteredCards = allCards; // کارت‌های فیلتر شده بر اساس دسته‌بندی و جستجو
+
+    // تابع مرتب‌سازی کارت‌ها بر اساس گزینه انتخابی
+    function sortCards() {
+        const sortOrder = sortSelect.value;
+        const sortAttribute = sortOrder === "newest-top" ? "data-update" : sortOrder === "highest-rating" ? "data-rating" : "data-site-rating";
+        const order = sortOrder === "newest-top" ? "desc" : "asc";
+
+        filteredCards.sort((a, b) => {
+            const aValue = parseFloat(a.getAttribute(sortAttribute)) || 0;
+            const bValue = parseFloat(b.getAttribute(sortAttribute)) || 0;
+            return order === "asc" ? aValue - bValue : bValue - aValue;
+        });
+        
+        // پس از مرتب‌سازی، صفحه‌بندی و نمایش صفحه اول به‌روزرسانی می‌شود
+        currentPage = 1;
+        showPage(currentPage);
+    }
 
     // تشخیص دسته‌بندی بر اساس URL
     const currentPath = window.location.pathname;
@@ -218,13 +236,16 @@ document.addEventListener("DOMContentLoaded", function () {
             return matchCategory && matchTitle;
         });
 
-        // نمایش صفحه اول نتایج جستجو
+        // پس از جستجو و فیلتر کردن، صفحه اول نمایش داده می‌شود
         currentPage = 1;
         showPage(currentPage);
     }
 
     // فعال کردن جستجو با کلیک بر روی دکمه
     searchButton.addEventListener("click", searchAndFilter);
+
+    // مرتب‌سازی کارت‌ها با انتخاب گزینه از منوی مرتب‌سازی
+    sortSelect.addEventListener("change", sortCards);
 
     // نمایش تمام کارت‌های دسته‌بندی شده در صفحه اول هنگام بارگذاری اولیه
     showPage(currentPage);
